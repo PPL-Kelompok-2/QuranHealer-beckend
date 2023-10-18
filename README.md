@@ -1,2 +1,2 @@
 # QuranHealer-backend
-Beck End Kelompok Proyek Perangkat Lunak Kelompok
+Back End Kelompok Proyek Perangkat Lunak Kelompok 2
