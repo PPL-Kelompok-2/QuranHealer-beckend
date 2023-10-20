@@ -68,16 +68,26 @@ const users = [
   },
   {
     method: "GET",
-    path: "/protected",
+    path: "/user",
     handler: (request, h) => {
       const token = request.headers.authorization.split(" ")[1]; // Extract the token
 
       // Verify the token
-      return jwt.verify(token, secretKey, (err, decoded) => {
+      return jwt.verify(token, secretKey, async (err, decoded) => {
         if (err) {
           return { error: "Invalid token" };
         }
-        return { message: "Token verified", decoded };
+        const [dataUser] = await Users.getData(decoded.user_id);
+        const { name, email, email_verif, password, telp, gender } = dataUser;
+        const result = {
+          name,
+          email,
+          email_verif,
+          password,
+          telp,
+          gender,
+        };
+        return { message: "Token verified", result };
       });
     },
   },
