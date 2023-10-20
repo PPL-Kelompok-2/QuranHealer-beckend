@@ -1,6 +1,13 @@
 import mysql from "mysql2";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: "../.env" });
+
+console.log(
+  process.env.MYSQL_HOST,
+  process.env.MYSQL_USER,
+  process.env.MYSQL_PASSWORD,
+  process.env.MYSQL_DATABASE
+);
 
 const pool = mysql
   .createPool({
@@ -71,3 +78,11 @@ class Users {
     return hasil;
   }
 }
+
+Users.listUser()
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
