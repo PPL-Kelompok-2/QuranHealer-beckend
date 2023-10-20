@@ -20,8 +20,18 @@ class Database {
   async validasiData(data) {
     this.validasiDataLengkap = (keys) => {
       for (const datas in data) {
+        console.log(keys[datas]);
         if (!data.includes(keys[datas])) {
           throw new Error("data kurang atau tidak lengkap");
+        }
+      }
+    };
+
+    this.dataBolehDiubah = (keys) => {
+      for (const datas in keys) {
+        console.log(keys[datas]);
+        if (!data.includes(keys[datas])) {
+          throw new Error("data salah");
         }
       }
     };
@@ -29,6 +39,7 @@ class Database {
     this.validasiDataKosong = (values) => {
       for (const datas in data) {
         if (values[datas] == "") {
+          console.log("validasi data kosong");
           throw new Error("terdapat data kosong");
         }
       }
@@ -36,6 +47,7 @@ class Database {
 
     this.validasiJumlahData = (keys) => {
       if (keys.length > data.length) {
+        console.log("validasi jumlah data");
         throw new Error("Data Terlalu Banyak");
       }
     };
@@ -62,7 +74,6 @@ class Database {
     const keys = Object.keys(data);
     const values = Object.values(data);
     this.validasiDataLengkap(keys);
-    this.validasiDataKosong(values);
     this.validasiJumlahData(keys);
 
     const placeholders = values.map(() => "?").join(", ");
@@ -80,11 +91,11 @@ class Database {
 
   // memasukkan data menggunakan object untuk parameter ke 2
   async updateData(id, dataUbah) {
-    // const keys = Object.keys(dataUbah);
-    // const values = Object.values(dataUbah);
-    // this.validasiDataLengkap(keys);
-    // this.validasiDataKosong(values);
-    // this.validasiJumlahData(keys);
+    const keys = Object.keys(dataUbah);
+    const values = Object.values(dataUbah);
+    this.dataBolehDiubah(keys);
+    this.validasiDataKosong(values);
+    this.validasiJumlahData(keys);
 
     for (const key in dataUbah) {
       try {
