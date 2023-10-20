@@ -80,6 +80,12 @@ class Database {
 
   // memasukkan data menggunakan object untuk parameter ke 2
   async updateData(id, dataUbah) {
+    // const keys = Object.keys(dataUbah);
+    // const values = Object.values(dataUbah);
+    // this.validasiDataLengkap(keys);
+    // this.validasiDataKosong(values);
+    // this.validasiJumlahData(keys);
+
     for (const key in dataUbah) {
       try {
         await this.pool.query(

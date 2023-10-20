@@ -77,7 +77,13 @@ const users = [
         if (err) {
           return { error: "Invalid token" };
         }
-        const [dataUser] = await Users.getData(decoded.user_id);
+        const [dataUser] = await Users.getData(decoded.user_id)
+          .then((data) => {
+            return data;
+          })
+          .catch((err) => {
+            throw err;
+          });
         const { name, email, email_verif, password, telp, gender } = dataUser;
         const result = {
           name,
@@ -88,6 +94,28 @@ const users = [
           gender,
         };
         return { message: "Token verified", result };
+      });
+    },
+  },
+  {
+    method: "PUT",
+    path: "/user/edit",
+    handler: (request, h) => {
+      const token = request.headers.authorization.split(" ")[1]; // Extract the token
+      const dataUbah = JSON.parse(request.payload);
+      // Verify the token
+      return jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+          return { error: "Invalid token" };
+        }
+        const data = await Users.updateData(decoded.user_id, dataUbah)
+          .then((data) => {
+            return data;
+          })
+          .catch((err) => {
+            return err;
+          });
+        return { message: "Token verified", data };
       });
     },
   },
