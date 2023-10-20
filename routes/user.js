@@ -37,12 +37,33 @@ const users = [
   {
     method: "POST",
     path: "/login",
-    handler: (request, h) => {
-      const user = { id: 1, username: "john_doe" };
+    handler: async (request, h) => {
+      const data = JSON.parse(request.payload);
+      let result;
+      try {
+        const { email, password } = data;
+        if (email && password) {
+          const [dataUser] = await Users.login(email, password)
+            .then((data) => {
+              return data;
+            })
+            .catch((err) => {
+              throw err;
+            });
+          result = {
+            token: jwt.sign(dataUser, secretKey, { expiresIn: "1h" }),
+          };
+        } else {
+          throw new Error("data yang dimasukkan salah");
+        }
+      } catch (err) {
+        const resultError = {
+          message: err.message,
+        };
+        result = resultError;
+      }
 
-      const token = jwt.sign(user, secretKey, { expiresIn: "1d" });
-
-      return JSON.stringify(token);
+      return h.response(result);
     },
   },
   {
