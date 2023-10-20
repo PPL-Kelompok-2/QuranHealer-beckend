@@ -1,20 +1,49 @@
+import { Users } from "../database/Data.js";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
 
 const secretKey = process.env.SECRETKEY;
 
 const users = [
   {
     method: "POST",
+    path: "/register",
+    handler: async (request, h) => {
+      let returning;
+      try {
+        const requestUser = JSON.parse(request.payload);
+        console.log(requestUser);
+        await Users.addData(requestUser)
+          .then((data) => {
+            console.log(data);
+            const returnData = {
+              message: `data berhasil ditambahkan dengan id ${data}`,
+            };
+            returning = h.response(returnData).code(200);
+          })
+
+          .catch((err) => {
+            throw err;
+          });
+      } catch (err) {
+        const response = {
+          message: err.message,
+        };
+        console.log(err);
+        returning = h.response(response).code(400);
+      }
+
+      return returning;
+    },
+  },
+  {
+    method: "POST",
     path: "/login",
     handler: (request, h) => {
       const user = { id: 1, username: "john_doe" };
 
-      const token = jwt.sign(user, secretKey, { expiresIn: "1h" });
-      console.log(token);
+      const token = jwt.sign(user, secretKey, { expiresIn: "1d" });
 
-      return { token };
+      return JSON.stringify(token);
     },
   },
   {
