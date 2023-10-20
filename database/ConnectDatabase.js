@@ -20,7 +20,6 @@ class Database {
   async validasiData(data) {
     this.validasiDataLengkap = (keys) => {
       for (const datas in data) {
-        console.log(keys[datas]);
         if (!data.includes(keys[datas])) {
           throw new Error("data kurang atau tidak lengkap");
         }
@@ -29,7 +28,6 @@ class Database {
 
     this.dataBolehDiubah = (keys) => {
       for (const datas in keys) {
-        console.log(keys[datas]);
         if (!data.includes(keys[datas])) {
           throw new Error("data salah");
         }
@@ -39,7 +37,6 @@ class Database {
     this.validasiDataKosong = (values) => {
       for (const datas in data) {
         if (values[datas] == "") {
-          console.log("validasi data kosong");
           throw new Error("terdapat data kosong");
         }
       }
@@ -47,7 +44,6 @@ class Database {
 
     this.validasiJumlahData = (keys) => {
       if (keys.length > data.length) {
-        console.log("validasi jumlah data");
         throw new Error("Data Terlalu Banyak");
       }
     };

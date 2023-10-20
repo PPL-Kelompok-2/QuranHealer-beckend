@@ -11,10 +11,8 @@ const users = [
       let result;
       try {
         const requestUser = JSON.parse(request.payload);
-        console.log(requestUser);
         await Users.addData(requestUser)
           .then((data) => {
-            console.log(data);
             const returnData = {
               message: `data berhasil ditambahkan dengan id ${data}`,
             };
