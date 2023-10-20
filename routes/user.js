@@ -8,7 +8,7 @@ const users = [
     method: "POST",
     path: "/register",
     handler: async (request, h) => {
-      let returning;
+      let result;
       try {
         const requestUser = JSON.parse(request.payload);
         console.log(requestUser);
@@ -18,7 +18,7 @@ const users = [
             const returnData = {
               message: `data berhasil ditambahkan dengan id ${data}`,
             };
-            returning = h.response(returnData).code(200);
+            result = h.response(returnData).code(200);
           })
 
           .catch((err) => {
@@ -28,11 +28,10 @@ const users = [
         const response = {
           message: err.message,
         };
-        console.log(err);
-        returning = h.response(response).code(400);
+        result = h.response(response).code(400);
       }
 
-      return returning;
+      return result;
     },
   },
   {

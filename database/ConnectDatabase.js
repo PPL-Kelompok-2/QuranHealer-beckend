@@ -33,6 +33,12 @@ class Database {
         }
       }
     };
+
+    this.validasiJumlahData = (keys) => {
+      if (keys.length > data.length) {
+        throw new Error("Data Terlalu Banyak");
+      }
+    };
   }
 
   async list() {
@@ -57,6 +63,7 @@ class Database {
     const values = Object.values(data);
     this.validasiDataLengkap(keys);
     this.validasiDataKosong(values);
+    this.validasiJumlahData(keys);
 
     const placeholders = values.map(() => "?").join(", ");
 
@@ -101,16 +108,5 @@ class Database {
     return hasil;
   }
 }
-
-// const user = new Database("USERS", "user_id", ["name", "password"]);
-
-// user
-//   .addData({ name: "akbar", password: "1234" })
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
 
 export default Database;

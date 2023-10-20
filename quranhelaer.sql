@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 19 Okt 2023 pada 15.04
+-- Waktu pembuatan: 20 Okt 2023 pada 16.36
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -105,13 +105,25 @@ CREATE TABLE `users` (
   `user_id` int(5) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
+  `email_verif` tinyint(1) NOT NULL DEFAULT 0,
   `password` varchar(50) NOT NULL,
   `telp` int(14) NOT NULL,
   `gender` char(1) NOT NULL,
-  `role` varchar(15) NOT NULL,
+  `role` varchar(15) NOT NULL DEFAULT 'user',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`user_id`, `name`, `email`, `email_verif`, `password`, `telp`, `gender`, `role`, `created_at`, `updated_at`) VALUES
+(26, 'akbar', '', 0, '', 0, '', '', '2023-10-20 13:09:43', '2023-10-20 13:09:43'),
+(27, 'akbar', '', 0, '1234', 0, '', '', '2023-10-20 13:32:18', '2023-10-20 13:32:18'),
+(28, 'akbar', '', 0, '', 0, '', '', '2023-10-20 13:39:11', '2023-10-20 13:39:11'),
+(29, 'akbar', '', 0, '', 0, '', '', '2023-10-20 13:40:13', '2023-10-20 13:40:13'),
+(30, 'akbar', 'akbar@123.com', 0, '123145', 1233245, 'L', 'user', '2023-10-20 14:10:15', '2023-10-20 14:10:15');
 
 --
 -- Indexes for dumped tables
@@ -199,7 +211,7 @@ ALTER TABLE `saveayat`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
