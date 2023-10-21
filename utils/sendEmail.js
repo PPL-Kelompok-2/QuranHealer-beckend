@@ -3,32 +3,54 @@ import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
 class sendEmail {
-  constructor(jenisMail) {
+  constructor(sender, password) {
+    this.sender = sender;
+    this.password = password;
     this.transporter = nodemailer.createTransport({
       service: "Gmail", // Gunakan penyedia email Anda
       auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSING,
+        user: this.sender,
+        pass: this.password,
       },
     });
-    this.mailOptions = {
-      from: process.env.EMAIL,
-      to: "akbar12ullah@gmail.com",
-      subject: `${jenisMail}`,
-      html: `<p>Klik <a href="/">di sini</a> untuk verifikasi email Anda.</p>`,
-    };
   }
 
-  sendMail() {
+  set subjek(subj) {
+    this.subjeks = subj;
+  }
+
+  set contentMail(contentMail) {
+    this.contentMails = contentMail;
+  }
+
+  sendMail(receiver) {
+    this.mailOptions = {
+      from: this.sender,
+      to: receiver,
+      subject: this.subjeks,
+      html: this.contentMails,
+    };
     this.transporter.sendMail(this.mailOptions, (error, info) => {
       if (error) {
-        console.error("Email tidak dapat dikirim:", error);
+        throw new Error("email tidak terkirim" + error);
       } else {
-        console.log("Email terkirim:", info.response);
+        return "Email terkirim: ";
       }
     });
   }
 }
 
-const sending = new sendEmail("verifikasi email");
-sending.sendMail();
+// const sending = new sendEmail(process.env.EMAIL, process.env.PASSING);
+// sending.subjek = "test";
+// sending.contentMail = "hallo ini akbar";
+// sending.sendMail("fftypz@gmail.com");
+// // sending
+// //   .sendMail("fftypz@gmail.com")
+// //   .then((data) => {
+// //     console.log(data);
+// //   })
+// //   .catch((err) => {
+// //     console.log(err);
+// //   });
+
+export default sendEmail;
