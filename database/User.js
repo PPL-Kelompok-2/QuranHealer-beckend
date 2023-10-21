@@ -1,4 +1,5 @@
 import Database from "./connectDatabase.js";
+import { passwordCheck, passwordKosong } from "../utils/passwordCheck.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -23,6 +24,22 @@ class User extends Database {
     } catch (err) {
       throw new Error(err);
     }
+  }
+
+  async gantiPassword(id, passwordLama, PasswordBaru) {
+    passwordKosong(passwordLama, PasswordBaru);
+    if (await passwordCheck(id, passwordLama, this.pool)) {
+      this.pool.query(
+        `
+            UPDATE USERS
+            SET password = ?
+            WHERE user_id = ?;
+        `,
+        [PasswordBaru, id]
+      );
+      return "Berhasil";
+    }
+    throw new Error("password salah");
   }
 }
 

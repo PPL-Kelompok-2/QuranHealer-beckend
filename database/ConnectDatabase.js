@@ -17,7 +17,7 @@ class Database {
   }
 
   // berisi array yang berisi kolom dalam table
-  async validasiData(data) {
+  validasiData(data) {
     this.validasiDataLengkap = (keys) => {
       for (const datas in data) {
         if (!data.includes(keys[datas])) {
@@ -47,6 +47,11 @@ class Database {
         throw new Error("Data Terlalu Banyak");
       }
     };
+  }
+
+  // dimasukkan menggunakan tipe data array
+  set dataDilarangUbah(data) {
+    this.dataLarang = data;
   }
 
   async list() {
@@ -87,11 +92,20 @@ class Database {
 
   // memasukkan data menggunakan object untuk parameter ke 2
   async updateData(id, dataUbah) {
+    //jika terdapat perubahan password
     const keys = Object.keys(dataUbah);
     const values = Object.values(dataUbah);
     this.dataBolehDiubah(keys);
     this.validasiDataKosong(values);
     this.validasiJumlahData(keys);
+
+    if (this.dataLarang.length) {
+      for (let i = 0; i < keys.length; i++) {
+        if (this.dataLarang.includes(keys[i])) {
+          throw new Error("data yang ingin diubah dilarang diubah");
+        }
+      }
+    }
 
     for (const key in dataUbah) {
       try {

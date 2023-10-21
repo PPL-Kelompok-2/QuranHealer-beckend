@@ -49,7 +49,9 @@ const users = [
               throw err;
             });
           result = {
-            token: jwt.sign(dataUser, secretKey, { expiresIn: "1h" }),
+            token: jwt.sign(dataUser, secretKey, {
+              expiresIn: process.env.EXPIRES_TOKEN,
+            }),
           };
         } else {
           throw new Error("data yang dimasukkan salah");
@@ -82,12 +84,11 @@ const users = [
           .catch((err) => {
             throw err;
           });
-        const { name, email, email_verif, password, telp, gender } = dataUser;
+        const { name, email, email_verif, telp, gender } = dataUser;
         const result = {
           name,
           email,
           email_verif,
-          password,
           telp,
           gender,
         };
@@ -112,6 +113,32 @@ const users = [
           })
           .catch((err) => {
             return err;
+          });
+        return { message: "Token verified", data };
+      });
+    },
+  },
+  {
+    method: "PUT",
+    path: "/user/password",
+    handler: (request, h) => {
+      const token = request.headers.authorization.split(" ")[1]; // Extract the token
+      const { oldPassword, newPassword } = JSON.parse(request.payload);
+      // Verify the token
+      return jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+          return { error: "Invalid token" };
+        }
+        const data = await Users.gantiPassword(
+          decoded.user_id,
+          oldPassword,
+          newPassword
+        )
+          .then((data) => {
+            return data;
+          })
+          .catch((err) => {
+            return { error: err.message };
           });
         return { message: "Token verified", data };
       });
