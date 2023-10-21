@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import cache from "memory-cache";
 import { Users } from "../database/Data.js";
 import verificationEmail from "../utils/verificationEmail.js";
-import codeCheck from "../utils/codeCheck.js";
+import { codeCheck } from "../utils/codeCheck.js";
 
 const secretKey = process.env.SECRETKEY;
 
@@ -55,7 +55,11 @@ const verifEmail = [
             return err;
           });
         const codeCache = cache.get(getUser.email);
-        const result = await codeCheck(code, codeCache, getUser.user_id)
+        const result = await codeCheck(
+          code.toUpperCase(),
+          codeCache,
+          getUser.user_id
+        )
           .then((data) => {
             return data;
           })

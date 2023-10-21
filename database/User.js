@@ -40,6 +40,21 @@ class User extends Database {
     throw new Error("password salah");
   }
 
+  async gantiPasswordEmail(email, PasswordBaru) {
+    if (!PasswordBaru) {
+      throw new Error("password kosong");
+    }
+    this.pool.query(
+      `
+            UPDATE USERS
+            SET password = ?
+            WHERE email = ?;
+        `,
+      [PasswordBaru, email]
+    );
+    return "Berhasil";
+  }
+
   async emailAda(email) {
     try {
       const [row] = await this.pool.query(
