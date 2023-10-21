@@ -1,5 +1,6 @@
 import Hapi from "@hapi/hapi";
 import users from "./routes/user.js";
+import verifEmail from "./routes/verifEmail.js";
 
 const init = async () => {
   const server = Hapi.server({
@@ -7,7 +8,7 @@ const init = async () => {
     host: "localhost",
   });
 
-  server.route([...users]);
+  server.route([...users, ...verifEmail]);
 
   await server.start();
   console.log("server berjalan");

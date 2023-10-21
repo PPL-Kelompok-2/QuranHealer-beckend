@@ -39,6 +39,21 @@ class User extends Database {
     }
     throw new Error("password salah");
   }
+
+  async emailAda(email) {
+    try {
+      const [row] = await this.pool.query(
+        `SELECT * FROM ${this.table} WHERE EMAIL = ?`,
+        [email]
+      );
+      if (!row.length) {
+        throw new Error("data tidak ada");
+      }
+      return row;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 }
 
 export default User;
