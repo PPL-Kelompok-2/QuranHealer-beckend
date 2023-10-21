@@ -1,7 +1,5 @@
 import Database from "./connectDatabase.js";
 import User from "./User.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 const Users = new User("USERS", "user_id");
 const Category = new Database("CATEGORY", "id_category");

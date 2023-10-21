@@ -1,7 +1,5 @@
 import Database from "./connectDatabase.js";
 import { passwordCheck, passwordKosong } from "../utils/passwordCheck.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 class User extends Database {
   constructor(tableName, id) {

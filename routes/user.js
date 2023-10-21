@@ -97,6 +97,34 @@ const users = [
     },
   },
   {
+    method: "GET",
+    path: "/user/{id}",
+    handler: (request, h) => {
+      const token = request.headers.authorization.split(" ")[1]; // Extract the token
+      const { id } = request.params;
+
+      // Verify the token
+      return jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+          return { error: "Invalid token" };
+        }
+        const [dataUser] = await Users.getData(id)
+          .then((data) => {
+            return data;
+          })
+          .catch((err) => {
+            throw err;
+          });
+        const { name, role } = dataUser;
+        const result = {
+          name,
+          role,
+        };
+        return { message: "Token verified", result };
+      });
+    },
+  },
+  {
     method: "PUT",
     path: "/user/edit",
     handler: (request, h) => {
