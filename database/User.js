@@ -54,6 +54,22 @@ class User extends Database {
       throw new Error(err);
     }
   }
+
+  async verifEmail(id) {
+    try {
+      const [row] = await this.pool.query(
+        `
+            UPDATE USERS
+            SET email_verif = true
+            WHERE user_id = ?;
+        `,
+        [id]
+      );
+      return "Data berhasil diverifikasi";
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 }
 
 export default User;
