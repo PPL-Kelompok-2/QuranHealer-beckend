@@ -1,4 +1,4 @@
-import { Users } from "../database/Data.js";
+import { Users } from "../model/Data.js";
 
 async function codeCheck(code1, code2, id) {
   if (code1 == code2) {

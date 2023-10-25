@@ -9,7 +9,7 @@ Verification.subjek = "VERIFICATION EMAIL FROM QURAN HEALER";
 
 async function verificationEmail(receiver) {
   const randomNum = generateRandom(4).toUpperCase();
-  cache.put(receiver, randomNum, 3600000);
+  // await cache.put(receiver, randomNum, 3600000);
   Verification.contentMail = `
     <center><h2>DON'T SHARE THIS CODE BELLOW</h2></center>
     <h3>this code is for verification email to quran healer application</h3>

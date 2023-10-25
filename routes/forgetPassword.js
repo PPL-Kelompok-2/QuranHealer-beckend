@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import cache from "memory-cache";
-import { Users } from "../database/Data.js";
+import { Users } from "../model/Data.js";
 import { codeCheckBiasa } from "../utils/codeCheck.js";
 import forgetEmail from "../utils/forgetEmail.js";
 import dotenv from "dotenv";
