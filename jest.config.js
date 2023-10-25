@@ -1,4 +1,4 @@
-// digunakan untuk jest testing bisa membaca dotenv file
+// digunakan supaya jest testing bisa untuk membaca dotenv file
 
 import path from "path";
 import dotenv from "dotenv";
