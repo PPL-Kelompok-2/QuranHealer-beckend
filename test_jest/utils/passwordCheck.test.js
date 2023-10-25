@@ -1,4 +1,4 @@
-import { passwordCheck, passwordKosong } from "../utils/passwordCheck";
+import { passwordCheck, passwordKosong } from "../../src/utils/passwordCheck";
 import mysql from "mysql2";
 
 const pool = mysql

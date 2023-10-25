@@ -1,5 +1,5 @@
-import forgetEmail from "../utils/forgetEmail";
-import verificationEmail from "../utils/verificationEmail";
+import forgetEmail from "../../src/utils/forgetEmail";
+import verificationEmail from "../../src/utils/verificationEmail";
 
 describe("verification email", () => {
   test("verification email", async () => {

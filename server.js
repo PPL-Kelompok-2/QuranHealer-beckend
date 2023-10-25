@@ -1,7 +1,7 @@
 import Hapi from "@hapi/hapi";
-import users from "./routes/user.js";
-import verifEmail from "./routes/verifEmail.js";
-import forgetPassword from "./routes/forgetPassword.js";
+import users from "./src/routes/user.js";
+import verifEmail from "./src/routes/verifEmail.js";
+import forgetPassword from "./src/routes/forgetPassword.js";
 
 const init = async () => {
   const server = Hapi.server({

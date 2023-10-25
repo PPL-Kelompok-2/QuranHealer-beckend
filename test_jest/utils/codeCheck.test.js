@@ -1,4 +1,4 @@
-import { codeCheck, codeCheckBiasa } from "../utils/codeCheck";
+import { codeCheck, codeCheckBiasa } from "../../src/utils/codeCheck";
 
 describe("codeCheckBiasa utils", () => {
   test("mengembalikan true karena code sama", () => {
