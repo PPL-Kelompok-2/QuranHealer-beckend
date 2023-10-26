@@ -5,6 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
+    "controller": "npx jest --testPathPattern=./test_jest/controller",
+    "middleware": "npx jest --testPathPattern=./test_jest/middleware",
+    "utils": "npx jest --testPathPattern=./test_jest/utils",
     "start": "nodemon server.js"
   },
   "type": "module",
