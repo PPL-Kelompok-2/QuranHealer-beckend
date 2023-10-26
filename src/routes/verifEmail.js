@@ -3,6 +3,7 @@ import cache from "memory-cache";
 import { Users } from "../../model/Data.js";
 import verificationEmail from "../utils/verificationEmail.js";
 import { codeCheck } from "../utils/codeCheck.js";
+import verifEmailController from "../controller/verifEmailController.js";
 
 const secretKey = process.env.SECRETKEY;
 
@@ -11,30 +12,7 @@ const verifEmail = [
   {
     method: "GET",
     path: "/verif",
-    handler: (request, h) => {
-      const token = request.headers.authorization.split(" ")[1]; // Extract the token
-      // Verify the token
-      return jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-          return { error: "Invalid token" };
-        }
-        const [getUser] = await Users.getData(decoded.user_id)
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            return err;
-          });
-        const result = await verificationEmail(getUser.email)
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            return err;
-          });
-        return { message: "Token verified", result };
-      });
-    },
+    handler: verifEmailController.verif
   },
   {
     method: "POST",
