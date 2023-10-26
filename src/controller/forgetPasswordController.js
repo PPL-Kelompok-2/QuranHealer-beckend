@@ -4,39 +4,27 @@ import { Users } from "../../model/Data.js";
 import { codeCheckBiasa } from "../utils/codeCheck.js";
 import forgetEmail from "../utils/forgetEmail.js";
 import dotenv from "dotenv";
+import inputForgetPasswordValidation from "../middleware/inputForgetPasswordValidator.js";
 dotenv.config({ path: "../.env" });
 
 const secretKey = process.env.SECRETKEY;
 
 const forgetPasswordController = {
   async forget(request, h) {
-    const { email } = JSON.parse(request.payload);
-    let result;
-    if (!email) {
-      return { message: "data yang dimasukkan salah atau kosong" };
-    }
     try {
-      const [data] = await Users.emailAda(email)
-        .then((data) => {
-          return data;
-        })
-        .catch((err) => {
-          throw err;
-        });
-      result = await forgetEmail(data.email)
-        .then((data) => {
-          return { message: data };
-        })
-        .catch((err) => {
-          throw err;
-        });
+      const value = await inputForgetPasswordValidation.forget(request);
+      const [data] = await Users.emailAda(value.email);
+      console.log(data);
+      const result = await forgetEmail(data.email);
+      return h.response({ result }).code(200);
     } catch (err) {
-      result = {
-        message: err.message,
-      };
+      console.log(err);
+      return h
+        .response({
+          error: err.message,
+        })
+        .code(400);
     }
-
-    return result;
   },
   async forgetCode(request, h) {
     const { email } = JSON.parse(request.payload);
