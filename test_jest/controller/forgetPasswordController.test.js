@@ -18,6 +18,9 @@ describe("forget password controller, controller, function forget", () => {
       expect(err).toHaveProperty("message");
     }
   });
+});
+
+describe("forget password controller, controller, function forget password",()=>{
   test("menghasilkan return 'token' dengan 'code' yang sama", async () => {
     response.code = cache.get(response.payload.email);
     response.payload = JSON.stringify(response.payload);
@@ -31,5 +34,20 @@ describe("forget password controller, controller, function forget", () => {
       expect(err).toHaveProperty("message");
     }
   });
-  test("mengembalikan nilai ");
-});
+})
+
+describe("forget password controller, controller, function newPassword", ()=>{
+  test("menghasilkan return berhasil", async ()=>{
+    response.payload = {
+      newPassword:"12345"
+    }
+    response.payload = JSON.stringify(response.payload)
+    try{
+      const result = await forgetPasswordController.newPassord(h, response)
+      response.headers.authorization = `token ${result.token}`;
+      expect(result.code).toBe(200)
+    }catch(err){
+      expect(err).toHaveProperty("message")
+    }
+  })
+})
