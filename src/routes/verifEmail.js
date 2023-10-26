@@ -17,36 +17,7 @@ const verifEmail = [
   {
     method: "POST",
     path: "/verif/{code}",
-    handler: (request, h) => {
-      const token = request.headers.authorization.split(" ")[1]; // Extract the token
-      const { code } = request.params;
-      // Verify the token
-      return jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-          return { error: "Invalid token" };
-        }
-        const [getUser] = await Users.getData(decoded.user_id)
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            return err;
-          });
-        const codeCache = cache.get(getUser.email);
-        const result = await codeCheck(
-          code.toUpperCase(),
-          codeCache,
-          getUser.user_id
-        )
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            return err;
-          });
-        return { message: "Token verified", result };
-      });
-    },
+    handler: verifEmailController.verifCode
   },
 ];
 
