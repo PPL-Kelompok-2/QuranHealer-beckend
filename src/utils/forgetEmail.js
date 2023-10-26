@@ -3,9 +3,10 @@ import sendEmail from "./sendEmail.js";
 import cache from "memory-cache";
 import dotenv from "dotenv";
 import templateForgetEmail from "../../views/templateForgetEmail.js";
+import config from "../../config.js";
 dotenv.config({ path: "../.env" });
 
-const Verification = new sendEmail(process.env.EMAIL, process.env.PASSING);
+const Verification = new sendEmail(config.email, process.env.PASSING);
 Verification.subjek = templateForgetEmail.subject;
 
 async function forgetEmail(receiver) {
