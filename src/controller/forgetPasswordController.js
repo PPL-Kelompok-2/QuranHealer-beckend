@@ -5,6 +5,7 @@ import { codeCheckBiasa } from "../utils/codeCheck.js";
 import forgetEmail from "../utils/forgetEmail.js";
 import dotenv from "dotenv";
 import inputForgetPasswordValidation from "../middleware/inputForgetPasswordValidator.js";
+import config from "../../config.js";
 dotenv.config({ path: "../.env" });
 
 const secretKey = process.env.SECRETKEY;
@@ -12,9 +13,8 @@ const secretKey = process.env.SECRETKEY;
 const forgetPasswordController = {
   async forget(request, h) {
     try {
-      const value = await inputForgetPasswordValidation.forget(request);
-      const [data] = await Users.emailAda(value.email);
-      console.log(data);
+      const { email } = await inputForgetPasswordValidation.forget(request);
+      const [data] = await Users.emailAda(email);
       const result = await forgetEmail(data.email);
       return h.response({ result }).code(200);
     } catch (err) {
@@ -27,62 +27,49 @@ const forgetPasswordController = {
     }
   },
   async forgetCode(request, h) {
-    const { email } = JSON.parse(request.payload);
-    const { code } = request.params;
-    if (!email) {
-      return { message: "data yang dimasukkan salah atau kosong" };
-    }
-
-    let result;
     try {
-      const [data] = await Users.emailAda(email)
-        .then((data) => {
-          return data;
-        })
-        .catch((err) => {
-          throw err;
-        });
-      if (codeCheckBiasa(code.toUpperCase(), cache.get(email))) {
-        const token = jwt.sign({ email: data.email }, secretKey, {
-          expiresIn: process.env.EXPIRES_TOKEN_SEMENTARA,
-        });
-        result = { token };
-      } else {
+      const { email } = await inputForgetPasswordValidation.forget(request);
+      const { code } = request.params;
+      const [data] = await Users.emailAda(email);
+      if (!codeCheckBiasa(code.toUpperCase(), cache.get(email))) {
         throw new Error("kode forget password salah");
       }
+      const token = jwt.sign({ email: data.email }, secretKey, {
+        expiresIn: config.expires_token,
+      });
+      return h.response({ token }).code(200);
     } catch (err) {
-      result = {
-        message: err.message,
-      };
+      return h
+        .response({
+          error: err.message,
+        })
+        .code(400);
     }
-
-    return h.response(result);
   },
   async newPassord(request, h) {
-    const token = request.headers.authorization.split(" ")[1];
-    const { newPassword } = JSON.parse(request.payload);
-
-    if (!newPassword) {
-      return {
-        message: "password kosong",
-      };
-    }
-    console.log(token, secretKey);
-
-    return jwt.verify(token, secretKey, async (err, decoded) => {
-      if (err) {
-        return { error: "Invalid token" };
-      }
-      const result = await Users.gantiPasswordEmail(decoded.email, newPassword)
-        .then((data) => {
-          return data;
+    try {
+      const token = request.headers.authorization.split(" ")[1];
+      const { newPassword } = await inputForgetPasswordValidation.newPassword(
+        request
+      );
+      const hasil = await jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+          throw new Error("invalid token");
+        }
+        const result = await Users.gantiPasswordEmail(
+          decoded.email,
+          newPassword
+        );
+        return { message: "Token verified", result };
+      });
+      return h.response(hasil).code(200);
+    } catch (err) {
+      return h
+        .response({
+          error: err.message,
         })
-        .catch((err) => {
-          return err;
-        });
-      console.log("diatas yang salah");
-      return { message: "Token verified", result };
-    });
+        .code(400);
+    }
   },
 };
 

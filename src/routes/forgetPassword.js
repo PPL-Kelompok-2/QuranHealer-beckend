@@ -7,7 +7,7 @@ const forgetPassword = [
     handler: forgetPasswordController.forget,
   },
   {
-    method: "GET",
+    method: "POST",
     path: "/forget/{code}",
     handler: forgetPasswordController.forgetCode,
   },
