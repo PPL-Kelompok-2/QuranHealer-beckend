@@ -1,5 +1,4 @@
 import Hapi from "@hapi/hapi";
-import Favicon from "hapi-favicon";
 import users from "./src/routes/user.js";
 import verifEmail from "./src/routes/verifEmail.js";
 import forgetPassword from "./src/routes/forgetPassword.js";
@@ -13,13 +12,6 @@ const init = async () => {
   });
 
   server.route([...homepage, ...users, ...verifEmail, ...forgetPassword]);
-
-  await server.register({
-    plugin: Favicon,
-    options: {
-      path: "./favicon.ico", // Lokasi berkas favicon.ico
-    },
-  });
 
   await server.start();
   console.log("server berjalan");
