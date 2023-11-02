@@ -54,8 +54,18 @@ class Database {
   }
 
   async list() {
-    const hasil = await this.pool.query(`SELECT * FROM ${this.table}`);
-    return hasil[0];
+    try {
+      const hasil = await this.pool.query(`SELECT * FROM ${this.table}`);
+      return hasil[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      this.pool.end((err) => {
+        if (err) {
+          console.log("tidak bisa memutuskan sambungan " + err);
+        }
+      });
+    }
   }
 
   async getData(id) {
