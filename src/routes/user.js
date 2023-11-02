@@ -16,7 +16,7 @@ const users = [
         await Users.addData(requestUser)
           .then((data) => {
             const returnData = {
-              message: `data berhasil ditambahkan dengan id ${data}`,
+              message: `register berhasil`,
             };
             result = h.response(returnData).code(200);
           })
@@ -43,7 +43,7 @@ const users = [
       try {
         const { email, password } = data;
         if (email && password) {
-          const [dataUser] = await Users.login(email, password)
+          const dataUser = await Users.login(email, password)
             .then((data) => {
               return data;
             })
