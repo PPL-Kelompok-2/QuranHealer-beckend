@@ -1,4 +1,5 @@
 import mysql from "mysql2";
+import config from "../config.js";
 
 class Database {
   constructor(table, idRowName) {
@@ -9,7 +10,7 @@ class Database {
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
         password: process.env.MYSQL_PASSWORD,
-        database: process.env.MYSQL_DATABASE,
+        database: config.database,
       })
       .promise();
   }
@@ -53,8 +54,18 @@ class Database {
   }
 
   async list() {
-    const hasil = await this.pool.query(`SELECT * FROM ${this.table}`);
-    return hasil[0];
+    try {
+      const hasil = await this.pool.query(`SELECT * FROM ${this.table}`);
+      return hasil[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      this.pool.end((err) => {
+        if (err) {
+          console.log("tidak bisa memutuskan sambungan " + err);
+        }
+      });
+    }
   }
 
   async getData(id) {

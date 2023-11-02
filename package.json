@@ -4,8 +4,11 @@
   "description": "Back End Kelompok Proyek Perangkat Lunak Kelompok 2",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "jest",
+    "controller": "npx jest --testPathPattern=./test_jest/controller",
+    "middleware": "npx jest --testPathPattern=./test_jest/middleware",
+    "utils": "npx jest --testPathPattern=./test_jest/utils",
+    "start": "nodemon server.js"
   },
   "type": "module",
   "author": "",
@@ -14,9 +17,15 @@
     "@hapi/hapi": "^21.3.2",
     "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
+    "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "memory-cache": "^0.2.0",
     "mysql2": "^3.6.2",
     "nodemailer": "^6.9.6"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.23.2",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1"
   }
 }

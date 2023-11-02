@@ -1,0 +1,4 @@
+// babel ini digunakan supaya jest bisa menggunakan EcmaScript
+{
+  "presets": ["@babel/preset-env"]
+}

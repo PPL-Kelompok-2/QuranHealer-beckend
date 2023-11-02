@@ -2,6 +2,9 @@ async function passwordCheck(id, passwordOld, pool) {
   const [result] = await pool.query(`SELECT * FROM USERS WHERE user_id = ?`, [
     id,
   ]);
+  if (result.length == 0) {
+    return false;
+  }
   if (passwordOld == result[0].password) {
     return true;
   }

@@ -1,5 +1,5 @@
 import Database from "./connectDatabase.js";
-import { passwordCheck, passwordKosong } from "../utils/passwordCheck.js";
+import { passwordCheck, passwordKosong } from "../src/utils/passwordCheck.js";
 
 class User extends Database {
   constructor(tableName, id) {

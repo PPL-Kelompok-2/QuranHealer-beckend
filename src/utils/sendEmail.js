@@ -21,34 +21,21 @@ class sendEmail {
     this.contentMails = contentMail;
   }
 
-  sendMail(receiver) {
+  async sendMail(receiver) {
     this.mailOptions = {
       from: this.sender,
       to: receiver,
       subject: this.subjeks,
       html: this.contentMails,
     };
-    this.transporter.sendMail(this.mailOptions, (error, info) => {
-      if (error) {
-        throw new Error("email tidak terkirim" + error);
-      } else {
-        return "Email terkirim: ";
-      }
-    });
+
+    try {
+      const info = await this.transporter.sendMail(this.mailOptions);
+      return "Email terkirim: " + info.response;
+    } catch (error) {
+      throw new Error("email tidak terkirim" + error);
+    }
   }
 }
-
-// const sending = new sendEmail(process.env.EMAIL, process.env.PASSING);
-// sending.subjek = "test";
-// sending.contentMail = "hallo ini akbar";
-// sending.sendMail("fftypz@gmail.com");
-// // sending
-// //   .sendMail("fftypz@gmail.com")
-// //   .then((data) => {
-// //     console.log(data);
-// //   })
-// //   .catch((err) => {
-// //     console.log(err);
-// //   });
 
 export default sendEmail;
