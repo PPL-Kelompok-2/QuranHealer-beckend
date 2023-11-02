@@ -8,15 +8,15 @@ class User extends Database {
 
   async login(email, password) {
     try {
-      const [row] = await this.pool.query(
-        `SELECT * FROM ${this.table} WHERE EMAIL = ?`,
+      const result = await this.pool.query(
+        `SELECT * FROM ${this.table} WHERE EMAIL = $1`,
         [email]
       );
-      if (!row.length) {
+      if (!result.rows.length) {
         throw new Error("data tidak ada");
       }
-      if (password == row[0].password) {
-        return row;
+      if (password == result.rows[0].password) {
+        return result.rows[0];
       }
       throw new Error("password salah");
     } catch (err) {
@@ -30,8 +30,8 @@ class User extends Database {
       this.pool.query(
         `
             UPDATE USERS
-            SET password = ?
-            WHERE user_id = ?;
+            SET password = $1
+            WHERE user_id = $2;
         `,
         [PasswordBaru, id]
       );
@@ -47,8 +47,8 @@ class User extends Database {
     this.pool.query(
       `
             UPDATE USERS
-            SET password = ?
-            WHERE email = ?;
+            SET password = $1
+            WHERE email = $2;
         `,
       [PasswordBaru, email]
     );
@@ -57,11 +57,11 @@ class User extends Database {
 
   async emailAda(email) {
     try {
-      const [row] = await this.pool.query(
-        `SELECT * FROM ${this.table} WHERE EMAIL = ?`,
+      const result = await this.pool.query(
+        `SELECT * FROM ${this.table} WHERE EMAIL = $1`,
         [email]
       );
-      if (!row.length) {
+      if (!result.row.length) {
         throw new Error("data tidak ada");
       }
       return row;
@@ -72,11 +72,11 @@ class User extends Database {
 
   async verifEmail(id) {
     try {
-      const [row] = await this.pool.query(
+      const result = await this.pool.query(
         `
             UPDATE USERS
             SET email_verif = true
-            WHERE user_id = ?;
+            WHERE user_id = $1;
         `,
         [id]
       );

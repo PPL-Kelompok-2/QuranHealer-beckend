@@ -1,7 +1,9 @@
 import User from "./User.js";
 import Database from "./Connect.js";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: "../.env" });
+
+console.log(process.env.POSTGRES_URL);
 
 const Users = new User("USERS", "user_id");
 const Category = new Database("CATEGORY", "id_category");

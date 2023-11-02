@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Okt 2023 pada 16.36
+-- Waktu pembuatan: 02 Nov 2023 pada 10.33
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `quranhelaer`
+-- Database: `quranhealer`
 --
 
 -- --------------------------------------------------------
@@ -60,6 +60,19 @@ CREATE TABLE `likepost` (
   `id_post` int(5) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `logouttoken`
+--
+
+CREATE TABLE `logouttoken` (
+  `id` int(200) NOT NULL,
+  `user_id` int(50) NOT NULL,
+  `tokenAccess` varchar(250) DEFAULT NULL,
+  `tokenRefresh` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -120,10 +133,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `name`, `email`, `email_verif`, `password`, `telp`, `gender`, `role`, `created_at`, `updated_at`) VALUES
 (26, 'akbar', '', 0, '', 0, '', '', '2023-10-20 13:09:43', '2023-10-20 13:09:43'),
-(27, 'akbar', '', 0, '1234', 0, '', '', '2023-10-20 13:32:18', '2023-10-20 13:32:18'),
+(27, 'akbar', '', 1, '1234', 0, '', '', '2023-10-20 13:32:18', '2023-10-25 17:55:26'),
 (28, 'akbar', '', 0, '', 0, '', '', '2023-10-20 13:39:11', '2023-10-20 13:39:11'),
 (29, 'akbar', '', 0, '', 0, '', '', '2023-10-20 13:40:13', '2023-10-20 13:40:13'),
-(30, 'akbar', 'akbar@123.com', 0, '123145', 1233245, 'L', 'user', '2023-10-20 14:10:15', '2023-10-20 14:10:15');
+(30, 'akbar', 'akbar@123.com', 0, '123145', 1233245, 'L', 'user', '2023-10-20 14:10:15', '2023-10-20 14:10:15'),
+(31, 'akbar', 'akbar12ullah@gmail.com', 1, 'akbar12345', 12345, 'L', 'user', '2023-10-25 15:31:36', '2023-10-26 07:28:50');
 
 --
 -- Indexes for dumped tables
@@ -151,6 +165,13 @@ ALTER TABLE `likepost`
   ADD PRIMARY KEY (`id_liked`),
   ADD KEY `user_id` (`user_id`,`id_post`),
   ADD KEY `id_post` (`id_post`);
+
+--
+-- Indeks untuk tabel `logouttoken`
+--
+ALTER TABLE `logouttoken`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indeks untuk tabel `post`
@@ -196,6 +217,12 @@ ALTER TABLE `likepost`
   MODIFY `id_liked` int(30) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT untuk tabel `logouttoken`
+--
+ALTER TABLE `logouttoken`
+  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT untuk tabel `post`
 --
 ALTER TABLE `post`
@@ -211,7 +238,7 @@ ALTER TABLE `saveayat`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -231,6 +258,12 @@ ALTER TABLE `comment`
 ALTER TABLE `likepost`
   ADD CONSTRAINT `likepost_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `likepost_ibfk_2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id_post`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `logouttoken`
+--
+ALTER TABLE `logouttoken`
+  ADD CONSTRAINT `logouttoken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Ketidakleluasaan untuk tabel `post`

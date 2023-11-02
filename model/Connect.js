@@ -1,18 +1,31 @@
 import mysql from "mysql2";
+import pg from "pg";
+const { Pool } = pg;
 import config from "../config.js";
 
 class Database {
   constructor(table, idRowName) {
     this.table = table;
     this.idRowName = idRowName;
-    this.pool = mysql
-      .createPool({
-        host: process.env.MYSQL_HOST,
-        user: process.env.MYSQL_USER,
-        password: process.env.MYSQL_PASSWORD,
-        database: config.database,
-      })
-      .promise();
+    this.pool = new Pool({
+      connectionString: process.env.POSTGRES_URL,
+      user: process.env.POSTGRES_USER,
+      host: process.env.POSTGRES_HOST,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DATABASE,
+      ssl: {
+        // Aktifkan SSL dengan mode require
+        rejectUnauthorized: false, // Setel false jika tidak memerlukan verifikasi sertifikat
+      },
+    });
+    // this.pool = mysql
+    //   .createPool({
+    //     host: process.env.MYSQL_HOST,
+    //     user: process.env.MYSQL_USER,
+    //     password: process.env.MYSQL_PASSWORD,
+    //     database: config.database,
+    //   })
+    //   .promise();
   }
 
   // berisi array yang berisi kolom dalam table
@@ -56,27 +69,21 @@ class Database {
   async list() {
     try {
       const hasil = await this.pool.query(`SELECT * FROM ${this.table}`);
-      return hasil[0];
+      return hasil.rows;
     } catch (err) {
       throw err;
-    } finally {
-      this.pool.end((err) => {
-        if (err) {
-          console.log("tidak bisa memutuskan sambungan " + err);
-        }
-      });
     }
   }
 
   async getData(id) {
     const hasil = await this.pool.query(
       `
-      SELECT * FROM ${this.table} WHERE ${this.idRowName} = ?
+      SELECT * FROM ${this.table} WHERE ${this.idRowName} = $1
     `,
       [id]
     );
 
-    return hasil[0];
+    return hasil.rows[0];
   }
 
   // memasukkan data menggunakan object untuk parameter
@@ -86,7 +93,9 @@ class Database {
     this.validasiDataLengkap(keys);
     this.validasiJumlahData(keys);
 
-    const placeholders = values.map(() => "?").join(", ");
+    const placeholders = values
+      .map((value, index) => `$${index + 1}`)
+      .join(", ");
 
     const hasil = await this.pool.query(
       `
@@ -96,7 +105,7 @@ class Database {
       [...values]
     );
 
-    return hasil[0].insertId;
+    return hasil;
   }
 
   // memasukkan data menggunakan object untuk parameter ke 2
@@ -121,8 +130,8 @@ class Database {
         await this.pool.query(
           `
               UPDATE ${this.table}
-              SET ${key} = ?
-              WHERE ${this.idRowName} = ?;
+              SET ${key} = $1
+              WHERE ${this.idRowName} = $2;
           `,
           [dataUbah[key], id]
         );
@@ -136,7 +145,7 @@ class Database {
   async delete(id) {
     const hasil = await this.pool.query(
       `
-      DELETE FROM ${this.table} WHERE ${this.idRowName} = ?
+      DELETE FROM ${this.table} WHERE ${this.idRowName} = $1
     `,
       [id]
     );
