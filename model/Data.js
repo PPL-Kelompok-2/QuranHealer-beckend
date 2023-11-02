@@ -1,5 +1,5 @@
 import User from "./User.js";
-import Database from "./ConnectDatabase.js";
+import Database from "./Connect.js";
 import dotenv from "dotenv";
 dotenv.config();
 

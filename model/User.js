@@ -1,4 +1,4 @@
-import Database from "./ConnectDatabase.js";
+import Database from "./Connect.js";
 import { passwordCheck, passwordKosong } from "../src/utils/passwordCheck.js";
 
 class User extends Database {
