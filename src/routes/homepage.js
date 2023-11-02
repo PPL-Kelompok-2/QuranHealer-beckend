@@ -1,4 +1,4 @@
-export default homepage = [
+const homepage = [
   {
     method: "GET",
     path: "/",
@@ -7,3 +7,5 @@ export default homepage = [
     },
   },
 ];
+
+export default homepage;
