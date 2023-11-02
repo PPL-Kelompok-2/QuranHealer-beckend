@@ -3,8 +3,6 @@ import Database from "./Connect.js";
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
-console.log(process.env.POSTGRES_URL);
-
 const Users = new User("USERS", "user_id");
 const Category = new Database("CATEGORY", "id_category");
 const SaveAyat = new Database("SAVEAYAT", "id_saveayat");

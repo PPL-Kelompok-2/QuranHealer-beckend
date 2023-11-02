@@ -73,13 +73,12 @@ const users = [
     path: "/user",
     handler: (request, h) => {
       const token = request.headers.authorization.split(" ")[1]; // Extract the token
-
       // Verify the token
       return jwt.verify(token, secretKey, async (err, decoded) => {
         if (err) {
           return { error: "Invalid token" };
         }
-        const [dataUser] = await Users.getData(decoded.user_id)
+        const dataUser = await Users.getData(decoded.user_id)
           .then((data) => {
             return data;
           })
