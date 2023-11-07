@@ -1,7 +1,7 @@
 import Joi from "joi";
 import isJson from "../utils/isJSON.js";
 
-const inputForgetPasswordValidation = {
+const forgetPasswordValidation = {
   forget(request) {
     return new Promise((resolve, reject) => {
       if (!isJson(request.payload)) {
@@ -34,4 +34,4 @@ const inputForgetPasswordValidation = {
   },
 };
 
-export default inputForgetPasswordValidation;
+export default forgetPasswordValidation;
