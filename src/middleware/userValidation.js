@@ -53,7 +53,23 @@ const userValidation = {
         }
         resolve(value);
       })
-    }
+    },
+    password(request){
+      return new Promise((resolve, reject)=>{
+          if (!isJson(request.payload)) {
+              reject(new Error("data yang dikirim bukan json"));
+            }
+            const schema = Joi.object({
+              oldPassword: Joi.string().max(50).min(1).required(),
+              newPassword: Joi.string().max(50).min(1).required(),
+            })
+            const {error, value} = schema.validate(JSON.parse(request.payload))
+            if (error) {
+              reject(error);
+            }
+            resolve(value);
+      })
+  },
 }
 
 

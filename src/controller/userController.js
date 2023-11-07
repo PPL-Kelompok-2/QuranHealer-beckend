@@ -84,13 +84,12 @@ const userController = {
             return h.response({error: err.message}).code(400)
           }
     },
-    // dibawah belum dirapikan
     async getUserId(request, h){
         try{
             const token = request.headers.authorization.split(" ")[1]; // Extract the token
             const { id } = request.params;
             // Verify token
-            jwt.verify(token, secretKey, (err, decoded) => {
+            await jwt.verify(token, secretKey, (err, decoded) => {
                 if (err) {
                   return { error: "Invalid token" };
                 }
@@ -103,7 +102,7 @@ const userController = {
             };
             return h.response({
                 message: "Token verified", result
-            })
+            }).code(200)
         }catch(err){
             return h.response({
                 error: err.message
@@ -114,7 +113,7 @@ const userController = {
         try{
             const token = request.headers.authorization.split(" ")[1]; // Extract the token
             const dataInput = await userValidation.userEdit(request);
-            const result = jwt.verify(token, secretKey, async (err, decoded)=>{
+            const result = await jwt.verify(token, secretKey, async (err, decoded)=>{
                 if(err){
                     throw new Error('Invalid token')
                 }
@@ -123,7 +122,7 @@ const userController = {
             })
             return h.response({
                 message: "Token verified", result
-            })
+            }).code(200)
         }catch(err){
             return h.response({
                 error: err.message
@@ -131,26 +130,29 @@ const userController = {
         }
     },
     async passwordEdit(request, h){
-        const token = request.headers.authorization.split(" ")[1]; // Extract the token
-      const { oldPassword, newPassword } = JSON.parse(request.payload);
-      // Verify the token
-      return jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-          return { error: "Invalid token" };
+        try{
+            const token = request.headers.authorization.split(" ")[1]; // Extract the token
+            const {oldPassword, newPassword} = await userValidation.password(request)
+            const result = await jwt.verify(token, secretKey, async (err, decoded) => {
+                if (err) {
+                  throw new Error('Invalid token')
+                }
+                const data = await Users.gantiPassword(
+                  decoded.user_id,
+                  oldPassword,
+                  newPassword
+                )
+                return data
+              });
+              return h.response({
+                message: "Token verified", result
+              }).code(200)
+        }catch(err){
+            console.log(err)
+            return h.response({
+                error: err.message
+            }).code(400)
         }
-        const data = await Users.gantiPassword(
-          decoded.user_id,
-          oldPassword,
-          newPassword
-        )
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            return { error: err.message };
-          });
-        return { message: "Token verified", data };
-      });
     },
 }
 
