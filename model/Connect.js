@@ -97,6 +97,11 @@ class Database {
       .map((value, index) => `$${index + 1}`)
       .join(", ");
 
+    const getDataWithEmail = await this.pool.query(`SELECT * FROM ${this.table} WHERE email = $1`, [data.email]);
+    if(getDataWithEmail.rows.length){
+      throw new Error('data sudah ada')
+    }
+
     const hasil = await this.pool.query(
       `
       INSERT INTO ${this.table} (${keys.join(", ")}) 
