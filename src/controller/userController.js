@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import userValidation from "../middleware/userValidation.js";
 dotenv.config();
 
+// terdapat error pada invalid token
+// error pada edit user
+
 const secretKey = process.env.SECRETKEY;
 const secretKeyRefresh = process.env.SECRETKEY_REFRESH;
 
@@ -78,51 +81,54 @@ const userController = {
             })
             return h.response({message : "Token verified", accessToken: result}).code(200)
           }catch(err){
-            return h.response({error: err}).code(400)
+            return h.response({error: err.message}).code(400)
           }
     },
     // dibawah belum dirapikan
     async getUserId(request, h){
-        const token = request.headers.authorization.split(" ")[1]; // Extract the token
-      const { id } = request.params;
-
-      // Verify the token
-      return jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-          return { error: "Invalid token" };
+        try{
+            const token = request.headers.authorization.split(" ")[1]; // Extract the token
+            const { id } = request.params;
+            // Verify token
+            jwt.verify(token, secretKey, (err, decoded) => {
+                if (err) {
+                  return { error: "Invalid token" };
+                }
+            })
+            const dataUser = await Users.getData(id);
+            const { name, role } = dataUser;
+            const result = {
+            name,
+            role,
+            };
+            return h.response({
+                message: "Token verified", result
+            })
+        }catch(err){
+            return h.response({
+                error: err.message
+            }).code(400)
         }
-        const [dataUser] = await Users.getData(id)
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            throw err;
-          });
-        const { name, role } = dataUser;
-        const result = {
-          name,
-          role,
-        };
-        return { message: "Token verified", result };
-      });
     }, 
     async userEdit(request, h){
-        const token = request.headers.authorization.split(" ")[1]; // Extract the token
-      const dataUbah = JSON.parse(request.payload);
-      // Verify the token
-      return jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-          return { error: "Invalid token" };
+        try{
+            const token = request.headers.authorization.split(" ")[1]; // Extract the token
+            const dataInput = await userValidation.userEdit(request);
+            const result = jwt.verify(token, secretKey, async (err, decoded)=>{
+                if(err){
+                    throw new Error('Invalid token')
+                }
+                const data = await Users.updateData(decoded.user_id, dataInput)
+                return data
+            })
+            return h.response({
+                message: "Token verified", result
+            })
+        }catch(err){
+            return h.response({
+                error: err.message
+            }).code(400)
         }
-        const data = await Users.updateData(decoded.user_id, dataUbah)
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            return err;
-          });
-        return { message: "Token verified", data };
-      });
     },
     async passwordEdit(request, h){
         const token = request.headers.authorization.split(" ")[1]; // Extract the token
