@@ -1,7 +1,7 @@
 import Joi from "joi";
 import isJson from "../utils/isJSON.js";
 
-const inputUserValidator = {
+const userValidation = {
     register(request){
         return new Promise((resolve, reject)=>{
             if (!isJson(request.payload)) {
@@ -23,4 +23,4 @@ const inputUserValidator = {
 }
 
 
-export default inputUserValidator
+export default userValidation

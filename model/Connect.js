@@ -109,8 +109,10 @@ class Database {
     `,
       [...values]
     );
-
-    return hasil;
+      if(!hasil.rowCount){
+        throw new Error("Gagal untuk mendaftar")
+      }
+    return "Berhasil untuk mendaftar";
   }
 
   // memasukkan data menggunakan object untuk parameter ke 2

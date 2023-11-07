@@ -1,6 +1,7 @@
 import { Users } from "../../model/Data.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import userValidation from "../middleware/userValidation.js";
 dotenv.config();
 
 const secretKey = process.env.SECRETKEY;
@@ -8,28 +9,15 @@ const secretKeyRefresh = process.env.SECRETKEY_REFRESH;
 
 const userController = {
     async register(request, h){
-        let result;
-      try {
-        const requestUser = JSON.parse(request.payload);
-        await Users.addData(requestUser)
-          .then((data) => {
-            const returnData = {
-              message: `register berhasil`,
-            };
-            result = h.response(returnData).code(200);
-          })
-
-          .catch((err) => {
-            throw err;
-          });
-      } catch (err) {
-        const response = {
-          message: err.message,
-        };
-        result = h.response(response).code(400);
-      }
-
-      return result;
+        try{
+            const dataInput = await userValidation.register(request)
+            const result = await Users.addData(dataInput).catch(err=>{throw err});
+            return h.response({result}).code(200)
+        }catch(err){
+            return h.response({
+                error: err.message
+            }).code(400)
+        }
     },
     async login(request, h){
         const data = JSON.parse(request.payload);
