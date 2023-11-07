@@ -130,19 +130,17 @@ const userController = {
     async newToken(request, h){
         try{
             const token = request.headers.authorization.split(" ")[1];
-            const hasil = await jwt.verify(token, secretKeyRefresh, async (err, decoded)=>{
+            const result = await jwt.verify(token, secretKeyRefresh, async (err, decoded)=>{
               if(err){
                 throw new Error('token salah')
               }
               const data = await Users.getData(decoded.user_id);
-              return {
-                message : "Token verified",
-                accessToken : jwt.sign(data, secretKey, {
+              return jwt.sign(data, secretKey, {
                   expiresIn: process.env.EXPIRES_TOKEN
                 })
-              }
+              
             })
-            return h.response(hasil).code(200)
+            return h.response({message : "Token verified", accessToken: result}).code(200)
           }catch(err){
             return h.response({error: err}).code(400)
           }
