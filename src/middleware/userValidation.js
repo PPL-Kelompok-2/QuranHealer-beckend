@@ -19,6 +19,22 @@ const userValidation = {
               }
               resolve(value);
         })
+    },
+    login(request){
+      return new Promise((resolve, reject)=>{
+        if (!isJson(request.payload)) {
+          reject(new Error("data yang dikirim bukan json"));
+        }
+        const schema = Joi.object({
+          email: Joi.string().email().max(50).min(3).required(),
+          password: Joi.string().max(50).min(1).required()
+        })
+        const {error, value} = schema.validate(JSON.parse(request.payload))
+        if (error) {
+          reject(error);
+        }
+        resolve(value);
+      })
     }
 }
 

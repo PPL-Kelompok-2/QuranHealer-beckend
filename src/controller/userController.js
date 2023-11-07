@@ -11,7 +11,7 @@ const userController = {
     async register(request, h){
         try{
             const dataInput = await userValidation.register(request)
-            const result = await Users.addData(dataInput).catch(err=>{throw err});
+            const result = await Users.addData(dataInput);
             return h.response({result}).code(200)
         }catch(err){
             return h.response({
@@ -20,62 +20,48 @@ const userController = {
         }
     },
     async login(request, h){
-        const data = JSON.parse(request.payload);
-      let result;
-      try {
-        const { email, password } = data;
-        if (email && password) {
-          const dataUser = await Users.login(email, password)
-            .then((data) => {
-              return data;
-            })
-            .catch((err) => {
-              throw err;
-            });
-          result = {
-            refreshToken: jwt.sign({user_id : dataUser.user_id}, secretKeyRefresh, {
-              expiresIn: process.env.EXPIRES_TOKEN_REFRESH
-            }),
-            accessToken: jwt.sign(dataUser, secretKey, {
-              expiresIn: process.env.EXPIRES_TOKEN,
-            }),
-          };
-        } else {
-          throw new Error("data yang dimasukkan salah");
+        try{
+            const dataInput = await userValidation.login(request)
+            const data = await Users.login(dataInput.email, dataInput.password)
+            return h.response({
+                refreshToken: jwt.sign({user_id : data.user_id}, secretKeyRefresh, {
+                    expiresIn: process.env.EXPIRES_TOKEN_REFRESH
+                  }),
+                  accessToken: jwt.sign(data, secretKey, {
+                    expiresIn: process.env.EXPIRES_TOKEN,
+                  }),
+            }).code(200)
+        }catch(err){
+            return h.response({
+                error: err.message
+            }).code(400)
         }
-      } catch (err) {
-        const resultError = {
-          message: err.message,
-        };
-        result = resultError;
-      }
-
-      return h.response(result);
     },
     async getUser(request, h){
-        const token = request.headers.authorization.split(" ")[1]; // Extract the token
-      // Verify the token
-      return jwt.verify(token, secretKey, async (err, decoded) => {
-        if (err) {
-          return { error: "Invalid token" };
+        try{
+            const token = request.headers.authorization.split(" ")[1]; // Extract the token
+            const result = await jwt.verify(token, secretKey, async (err, decoded)=>{
+                if(err){
+                    throw new Error('Invalid token')
+                }
+                const data = await Users.getData(decoded.user_id);
+                const { name, email, email_verif, gender } = data;
+                return {
+                name,
+                email,
+                email_verif,
+                gender,
+                };
+            })
+            return h.response({
+                message: "Token verified",
+                result
+            }).code(200)
+        }catch(err){
+            return h.response({
+                error: err.message
+            }).code(400)
         }
-        const dataUser = await Users.getData(decoded.user_id)
-          .then((data) => {
-            return data;
-          })
-          .catch((err) => {
-            throw err;
-          });
-        const { name, email, email_verif, telp, gender } = dataUser;
-        const result = {
-          name,
-          email,
-          email_verif,
-          telp,
-          gender,
-        };
-        return { message: "Token verified", result };
-      });
     },
     async getUserId(request, h){
         const token = request.headers.authorization.split(" ")[1]; // Extract the token
