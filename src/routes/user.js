@@ -1,9 +1,10 @@
 import { Users } from "../../model/Data.js";
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
 const secretKey = process.env.SECRETKEY;
+const secretKeyRefresh = process.env.SECRETKEY_REFRESH;
 
 const users = [
   {
@@ -51,7 +52,10 @@ const users = [
               throw err;
             });
           result = {
-            token: jwt.sign(dataUser, secretKey, {
+            refreshToken: jwt.sign({user_id : dataUser.user_id}, secretKeyRefresh, {
+              expiresIn: process.env.EXPIRES_TOKEN_REFRESH
+            }),
+            accessToken: jwt.sign(dataUser, secretKey, {
               expiresIn: process.env.EXPIRES_TOKEN,
             }),
           };
@@ -173,6 +177,30 @@ const users = [
       });
     },
   },
+  {
+    method: 'GET',
+    path:'/token',
+    handler: async (request, h)=>{
+      try{
+        const token = request.headers.authorization.split(" ")[1];
+        const hasil = await jwt.verify(token, secretKeyRefresh, async (err, decoded)=>{
+          if(err){
+            throw new Error('token salah')
+          }
+          const data = await Users.getData(decoded.user_id);
+          return {
+            message : "Token verified",
+            accessToken : jwt.sign(data, secretKey, {
+              expiresIn: process.env.EXPIRES_TOKEN
+            })
+          }
+        })
+        return h.response(hasil).code(200)
+      }catch(err){
+        return h.response({error: err}).code(400)
+      }
+    }
+  }
 ];
 
 export default users;
