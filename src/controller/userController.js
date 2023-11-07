@@ -4,9 +4,6 @@ import dotenv from "dotenv";
 import userValidation from "../middleware/userValidation.js";
 dotenv.config();
 
-// terdapat error pada invalid token
-// error pada edit user
-
 const secretKey = process.env.SECRETKEY;
 const secretKeyRefresh = process.env.SECRETKEY_REFRESH;
 
