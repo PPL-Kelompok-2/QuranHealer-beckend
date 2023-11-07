@@ -63,6 +63,25 @@ const userController = {
             }).code(400)
         }
     },
+    async newToken(request, h){
+        try{
+            const token = request.headers.authorization.split(" ")[1];
+            const result = await jwt.verify(token, secretKeyRefresh, async (err, decoded)=>{
+              if(err){
+                throw new Error('token salah')
+              }
+              const data = await Users.getData(decoded.user_id);
+              return jwt.sign(data, secretKey, {
+                  expiresIn: process.env.EXPIRES_TOKEN
+                })
+              
+            })
+            return h.response({message : "Token verified", accessToken: result}).code(200)
+          }catch(err){
+            return h.response({error: err}).code(400)
+          }
+    },
+    // dibawah belum dirapikan
     async getUserId(request, h){
         const token = request.headers.authorization.split(" ")[1]; // Extract the token
       const { id } = request.params;
@@ -127,24 +146,6 @@ const userController = {
         return { message: "Token verified", data };
       });
     },
-    async newToken(request, h){
-        try{
-            const token = request.headers.authorization.split(" ")[1];
-            const result = await jwt.verify(token, secretKeyRefresh, async (err, decoded)=>{
-              if(err){
-                throw new Error('token salah')
-              }
-              const data = await Users.getData(decoded.user_id);
-              return jwt.sign(data, secretKey, {
-                  expiresIn: process.env.EXPIRES_TOKEN
-                })
-              
-            })
-            return h.response({message : "Token verified", accessToken: result}).code(200)
-          }catch(err){
-            return h.response({error: err}).code(400)
-          }
-    }
 }
 
 export default userController
