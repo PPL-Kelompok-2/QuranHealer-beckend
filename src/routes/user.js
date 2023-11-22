@@ -1,4 +1,5 @@
 import userController from "../controller/userController.js";
+import userDevelopment from "../controller/userDevelopment.js";
 
 const users = [
   {
@@ -35,6 +36,12 @@ const users = [
     method: 'GET',
     path:'/token',
     handler: userController.newToken
+  },
+  //for development purposes and must be deleted after deployment
+  {
+    method: 'GET',
+    path: '/allusers',
+    handler: userDevelopment.allData
   }
 ];
 
