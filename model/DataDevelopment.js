@@ -14,4 +14,18 @@ export class DataDevelopment extends User{
             throw err
         }
     }
+    async deleteData(email){
+        try{
+            await this.pool.query(`
+                DELETE FROM USERS WHERE email = $1
+            `, [email])
+            const dataEmail = await this.pool.query(`
+                SELECT * FROM USERS WHERE email = $1
+            `, [email])
+            if(!dataEmail.rows.length) return 'Berhasil didelete'
+            throw new Error('data gagal di delete')
+        }catch(err){
+            throw err
+        }
+    }
 }

@@ -42,6 +42,11 @@ const users = [
     method: 'GET',
     path: '/allusers',
     handler: userDevelopment.allData
+  },
+  {
+    method: 'GET',
+    path: '/delete/{email}',
+    handler: userDevelopment.deleteData
   }
 ];
 

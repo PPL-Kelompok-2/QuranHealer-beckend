@@ -16,6 +16,20 @@ const userDevelopment = {
                 error:err.message
             }).code(400)
         }
+    },
+    async deleteData(request, h){
+        try {
+            const { email } = request.params;
+            const result = await DDevelopment.deleteData(email)
+            return h.response({
+                result
+            }).code(200)
+        } catch (err) {
+            console.error(err)
+            return h.response({
+                error: err.message
+            }).code(400)
+        }
     }
 }
 
