@@ -2,7 +2,7 @@ const homepage = [
   {
     method: "GET",
     path: "/",
-    handler: (h, request) => {
+    handler: (request, h) => {
       return "HALO";
     },
   },

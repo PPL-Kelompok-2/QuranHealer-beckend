@@ -61,7 +61,7 @@ class User extends Database {
         `SELECT * FROM ${this.table} WHERE EMAIL = $1`,
         [email]
       );
-      if (!result.row.length) {
+      if (!result.rows.length) {
         throw new Error("data tidak ada");
       }
       return row;
