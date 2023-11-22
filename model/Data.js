@@ -1,6 +1,7 @@
 import User from "./User.js";
 import Database from "./Connect.js";
 import dotenv from "dotenv";
+import { DataDevelopment } from "./DataDevelopment.js";
 dotenv.config();
 
 const Users = new User("USERS", "user_id");
@@ -10,8 +11,10 @@ const Post = new Database("POST", "id_post");
 const Like = new Database("LIKEPOST", "id_liked");
 const Comment = new Database("COMMENT", "id_comment");
 
+const DDevelopment = new DataDevelopment
+
 Users.validasiData(["name", "email", "password", "gender"]);
 Users.dataDilarangUbah = ["password"];
 // HARUS DITAMBAHIN UNTUK YANG LAINNYA JUGA
 
-export { Users, Category, SaveAyat, Post, Like, Comment };
+export { Users, Category, SaveAyat, Post, Like, Comment, DDevelopment };

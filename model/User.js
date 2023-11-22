@@ -56,7 +56,7 @@ class User extends Database {
       SELECT * FROM USERS WHERE email = $1
     `, [email])
     if(passwordDirubah.rows[0].password == PasswordBaru) return "berhasil"
-    return "Gagal ditambahkan";
+    throw new Error("Gagal ditambahkan");
   }
 
   async emailAda(email) {
