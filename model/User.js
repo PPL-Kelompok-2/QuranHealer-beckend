@@ -44,7 +44,7 @@ class User extends Database {
     if (!PasswordBaru) {
       throw new Error("password kosong");
     }
-    this.pool.query(
+    await this.pool.query(
       `
             UPDATE USERS
             SET password = $1
@@ -52,7 +52,11 @@ class User extends Database {
         `,
       [PasswordBaru, email]
     );
-    return "Berhasil";
+    const passwordDirubah = await this.pool.query(`
+      SELECT * FROM USERS WHERE email = $1
+    `, [email])
+    if(passwordDirubah.rows[0].password == PasswordBaru) return "berhasil"
+    return "Gagal ditambahkan";
   }
 
   async emailAda(email) {
