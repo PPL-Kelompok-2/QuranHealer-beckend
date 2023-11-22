@@ -64,7 +64,7 @@ class User extends Database {
       if (!result.rows.length) {
         throw new Error("data tidak ada");
       }
-      return row;
+      return result.rows
     } catch (err) {
       throw new Error(err);
     }

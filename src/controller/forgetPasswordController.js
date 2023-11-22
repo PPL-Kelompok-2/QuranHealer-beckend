@@ -18,6 +18,7 @@ const forgetPasswordController = {
       const result = await forgetEmail(data.email);
       return h.response({ result }).code(200);
     } catch (err) {
+      console.error(err)
       return h
         .response({
           error: err.message,
