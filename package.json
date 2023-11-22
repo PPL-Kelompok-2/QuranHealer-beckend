@@ -16,6 +16,7 @@
   "dependencies": {
     "@hapi/hapi": "^21.3.2",
     "@vercel/postgres": "^0.5.1",
+    "aws-sdk": "^2.1501.0",
     "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
     "joi": "^17.11.0",
