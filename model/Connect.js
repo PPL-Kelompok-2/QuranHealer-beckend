@@ -1,23 +1,12 @@
 import mysql from "mysql2";
-import pg from "pg";
-const { Pool } = pg;
 import config from "../config.js";
+import { MakeConnection } from "./makeConnection.js";
 
-class Database {
+class Database extends MakeConnection{
   constructor(table, idRowName) {
+    super();
     this.table = table;
     this.idRowName = idRowName;
-    this.pool = new Pool({
-      connectionString: process.env.POSTGRES_URL,
-      user: process.env.POSTGRES_USER,
-      host: process.env.POSTGRES_HOST,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
-      ssl: {
-        // Aktifkan SSL dengan mode require
-        rejectUnauthorized: false, // Setel false jika tidak memerlukan verifikasi sertifikat
-      },
-    });
     // this.pool = mysql
     //   .createPool({
     //     host: process.env.MYSQL_HOST,
