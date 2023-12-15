@@ -7,7 +7,7 @@ export class Post extends MakeConnection {
     super();
   }
 
-  async allPost(indexes, Id_user_ustadz = null) {
+  async allPost(indexes, Id_user_ustadz = null, user_id) {
     const datas = Id_user_ustadz
       ? await this.pool.query(
           `
@@ -21,7 +21,22 @@ export class Post extends MakeConnection {
               `,
           [indexes * 10 - 10]
         );
+    const result = await this.getDataForListPost(datas, user_id);
+    return result;
+  }
 
+  async postByUser(indexes, user_id) {
+    const datas = await this.pool.query(
+      `
+        SELECT * FROM post WHERE user_id = $2 ORDER BY created_at DESC LIMIT 10 OFFSET $1
+    `,
+      [indexes * 10 - 10, user_id]
+    );
+    const result = await this.getDataForListPost(datas, user_id);
+    return result;
+  }
+
+  async getDataForListPost(datas, idUser) {
     const promisesComment = datas.rows.map(async (obj) => {
       const {
         id_post,
@@ -30,7 +45,6 @@ export class Post extends MakeConnection {
         judul,
         username,
         konten,
-        category_id,
         created_at,
         updated_at,
       } = obj;
@@ -39,11 +53,10 @@ export class Post extends MakeConnection {
       const down = await this.getCountDown(id_post);
       return {
         id_post,
-        user_id,
+        byUser: user_id == idUser ? true : false,
         username,
         id_user_ustadz,
         judul,
-        category_id,
         konten,
         up,
         down,
@@ -75,7 +88,7 @@ export class Post extends MakeConnection {
         datas.Username,
         datas.Judul,
         datas.Konten,
-        datas.Category_id,
+        1,
       ]
     );
     if (result.rows.length > 0) {
@@ -104,7 +117,6 @@ export class Post extends MakeConnection {
       judul,
       username,
       konten,
-      category_id,
       created_at,
       updated_at,
     } = datas.rows[0];
@@ -123,7 +135,6 @@ export class Post extends MakeConnection {
         username,
         id_user_ustadz,
         judul,
-        category_id,
         konten,
         up,
         down,
@@ -227,7 +238,7 @@ export class Post extends MakeConnection {
   async getComment(Id_post) {
     const result = await this.pool.query(
       `
-        SELECT Users.Name, comment.*
+        SELECT Users.Name, Users.Role, comment.*
         FROM comment
         INNER JOIN Users ON comment.User_id = Users.User_id WHERE Id_post = $1;
     `,
@@ -241,12 +252,14 @@ export class Post extends MakeConnection {
   transformComment(inputArray, parentId = null) {
     const result = [];
 
-    inputArray.forEach((item) => {
+    inputArray.forEach(async (item) => {
       if (item.id_tocomment === parentId) {
+        const ustadz = item.role == "ustadz";
         const transformedItem = {
-          id: item.id_comment,
+          id_comment: item.id_comment,
           //   name: item.name,
-          username: "anonymous",
+          username: ustadz ? item.name : "anonymous",
+          role: item.role,
           isiComment: item.comment,
           comment: this.transformComment(inputArray, item.id_comment),
         };

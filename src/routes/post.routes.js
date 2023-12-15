@@ -11,4 +11,9 @@ export const post = [
     path: "/post",
     handler: postController.post,
   },
+  {
+    method: "GET",
+    path: "/user/post",
+    handler: postController.userPost,
+  },
 ];

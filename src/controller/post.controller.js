@@ -12,7 +12,12 @@ export const postController = {
   async post(request, h) {
     const ustadz = request.query.ustadz || null;
     const page = request.query.page || 1;
-    const result = await Posts.allPost(page, ustadz);
+    const result = await Posts.allPost(page, ustadz, 64);
+    return h.response({ result }).code(200);
+  },
+  async userPost(request, h) {
+    const page = request.query.page || 1;
+    const result = await Posts.postByUser(page, 64);
     return h.response({ result }).code(200);
   },
 };
