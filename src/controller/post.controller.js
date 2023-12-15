@@ -25,7 +25,8 @@ export const postController = {
       if (error) {
         throw error;
       }
-      return h.response({ result }).code(200);
+      const role = await Users.getRole(idUser);
+      return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       return h.response({ error: error.message });
     }
@@ -167,6 +168,69 @@ export const postController = {
   async dislike(request, h) {
     const result = await liked(request, h, false);
     return result;
+  },
+  async deletePost(request, h) {
+    const token = request.headers.authorization.split(" ")[1];
+    const { idPost } = request.params;
+    try {
+      if (!idPost) {
+        throw new Error("idPost can not be null");
+      }
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const role = await Users.getRole(userId);
+      if (!(role == "user")) {
+        throw new Error("Unauthorized");
+      }
+      const [result, error] = await Posts.deletePost(idPost, userId);
+      if (error) {
+        throw error;
+      }
+      return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
+  },
+  async deleteComment(request, h) {
+    const token = request.headers.authorization.split(" ")[1];
+    const { idComment } = request.params;
+    try {
+      if (!idComment) {
+        throw new Error("idComment can not be null");
+      }
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const role = await Users.getRole(userId);
+      const [result, error] = await Posts.deleteComment(idComment, userId);
+      if (error) {
+        throw error;
+      }
+      return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
   },
 };
 

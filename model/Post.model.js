@@ -267,6 +267,42 @@ export class Post extends MakeConnection {
     }
   }
 
+  async deletePost(idPost, idUser) {
+    const userAuthorize = await this.pool.query(
+      `SELECT * FROM post WHERE id_post = $1 AND user_id = $2`,
+      [idPost, idUser]
+    );
+    // check user authorize
+    if (!userAuthorize.rows.length) return [null, new Error("Unauthorized")];
+    // delete post
+    await this.pool.query("DELETE FROM post WHERE id_post = $1", [idPost]);
+    const result = await this.pool.query(
+      "SELECT * FROM post WHERE id_post = $1",
+      [idPost]
+    );
+    if (result.rows.length) return [null, new Error("data gagal dihapus")];
+    return ["data berhasil dihapus", null, idPost];
+  }
+
+  async deleteComment(idComment, idUser) {
+    const userAuthorize = await this.pool.query(
+      `SELECT * FROM comment WHERE id_comment = $1 AND user_id = $2`,
+      [idComment, idUser]
+    );
+    // check user authorize
+    if (!userAuthorize.rows.length) return [null, new Error("Unauthorized")];
+    // delete post
+    await this.pool.query("DELETE FROM comment WHERE id_comment = $1", [
+      idComment,
+    ]);
+    const result = await this.pool.query(
+      "SELECT * FROM comment WHERE id_comment = $1",
+      [idComment]
+    );
+    if (result.rows.length) return [null, new Error("data gagal dihapus")];
+    return ["data berhasil dihapus", null, idComment];
+  }
+
   async getUserIdByIdPost(idPost, idComment) {
     const result = await this.pool.query(
       `
@@ -297,14 +333,15 @@ export class Post extends MakeConnection {
     inputArray.forEach(async (item) => {
       if (item.id_tocomment === parentId) {
         const ustadz = item.role == "ustadz";
+        const user = item.user_id == idUser;
         const transformedItem = {
           id_comment: item.id_comment,
           //   name: item.name,
           username: ustadz ? item.name : "anonymous",
           role: item.role,
-          byUser: item.user_id == idUser ? true : false,
+          byUser: user,
           isiComment: item.comment,
-          comment: this.transformComment(inputArray, item.id_comment),
+          comment: this.transformComment(inputArray, item.id_comment, idUser),
         };
         result.push(transformedItem);
       }

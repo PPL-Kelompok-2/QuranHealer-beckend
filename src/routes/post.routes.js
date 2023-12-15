@@ -21,6 +21,28 @@ export const post = [
     path: "/post/{idPost}",
     handler: postController.addComment,
   },
+  // BELUM SELESAI
+  {
+    method: "PUT",
+    path: "/post/{idPost}",
+    handler: postController.addComment,
+  },
+  {
+    method: "PUT",
+    path: "/comment/{idComment}",
+    handler: postController.addComment,
+  },
+  {
+    method: "DELETE",
+    path: "/post/{idPost}",
+    handler: postController.deletePost,
+  },
+  {
+    method: "DELETE",
+    path: "/comment/{idComment}",
+    handler: postController.deleteComment,
+  },
+  // BATAS
   {
     method: "POST",
     path: "/post/{idPost}/{idComment}",
