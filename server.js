@@ -5,6 +5,7 @@ import forgetPassword from "./src/routes/forgetPassword.js";
 import config from "./config.js";
 import homepage from "./src/routes/homepage.js";
 import favicon from "./src/routes/favicon.js";
+import { post } from "./src/routes/post.routes.js";
 
 const init = async () => {
   const server = Hapi.server({
@@ -12,7 +13,14 @@ const init = async () => {
     host: config.host,
   });
 
-  server.route([...homepage, ...users, ...verifEmail, ...forgetPassword, ...favicon]);
+  server.route([
+    ...homepage,
+    ...users,
+    ...verifEmail,
+    ...forgetPassword,
+    ...favicon,
+    ...post,
+  ]);
 
   await server.start();
   console.log("server berjalan");
