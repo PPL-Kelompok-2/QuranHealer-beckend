@@ -232,7 +232,37 @@ export const postController = {
       return h.response({ error: error.message }).code(400);
     }
   },
-  async editPost(request, h) {},
+  async editPost(request, h) {
+    const token = request.headers.authorization.split(" ")[1];
+    const { idPost } = request.params;
+    try {
+      if (!idPost) {
+        throw new Error("idPost can not be null");
+      }
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const values = await postValidation.editPost(request);
+      const [result, error] = await Posts.editPost(userId, idPost, values);
+      if (error) {
+        throw error;
+      }
+      const role = await Users.getRole(userId);
+      return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
+  },
   async editComment(request, h) {
     const token = request.headers.authorization.split(" ")[1];
     const { idComment } = request.params;

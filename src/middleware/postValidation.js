@@ -19,6 +19,23 @@ export const postValidation = {
       resolve(value);
     });
   },
+  editPost(request) {
+    return new Promise((resolve, reject) => {
+      if (!isJson(request.payload)) {
+        reject(new Error("data yang dikirim bukan json"));
+      }
+      const schema = Joi.object({
+        username: Joi.string().max(50).min(1),
+        judul: Joi.string().max(100).min(1),
+        konten: Joi.string().min(1),
+      });
+      const { error, value } = schema.validate(JSON.parse(request.payload));
+      if (error) {
+        reject(error);
+      }
+      resolve(value);
+    });
+  },
   addComment(request) {
     return new Promise((resolve, reject) => {
       if (!isJson(request.payload)) {
