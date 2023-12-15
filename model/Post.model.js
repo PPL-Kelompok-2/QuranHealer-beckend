@@ -134,7 +134,7 @@ export class Post extends MakeConnection {
     return [
       {
         id_post,
-        user_id,
+        // user_id,
         username,
         byUser: user_id == idUser ? true : false,
         id_user_ustadz,
