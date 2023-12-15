@@ -17,6 +17,16 @@ export const post = [
     handler: postController.addPost,
   },
   {
+    method: "POST",
+    path: "/post/{idPost}",
+    handler: postController.addComment,
+  },
+  {
+    method: "POST",
+    path: "/post/{idPost}/{idComment}",
+    handler: postController.addComment,
+  },
+  {
     method: "GET",
     path: "/post/{idPost}/like",
     handler: postController.like,

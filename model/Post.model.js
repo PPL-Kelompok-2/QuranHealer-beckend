@@ -267,6 +267,30 @@ export class Post extends MakeConnection {
     }
   }
 
+  async getUserIdByIdPost(idPost, idComment) {
+    const result = await this.pool.query(
+      `
+      SELECT user_id FROM post WHERE id_post = $1
+    `,
+      [idPost]
+    );
+    if (idComment) {
+      const comment = await this.pool.query(
+        `
+        SELECT * FROM comment WHERE id_comment = $1
+      `,
+        [idComment]
+      );
+      if (!comment.rows.length) {
+        return [null, new Error("comment tidak ada")];
+      }
+    }
+    if (result.rows.length) {
+      return [result.rows[0].user_id, null];
+    }
+    return [null, new Error("post tidak ada")];
+  }
+
   transformComment(inputArray, parentId = null, idUser) {
     const result = [];
 

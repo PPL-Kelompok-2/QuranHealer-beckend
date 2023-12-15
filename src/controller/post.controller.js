@@ -117,6 +117,49 @@ export const postController = {
       return h.response({ error: error.message }).code(400);
     }
   },
+  async addComment(request, h) {
+    const { idPost, idComment = null } = request.params;
+    const token = request.headers.authorization.split(" ")[1];
+    try {
+      const { comment } = await postValidation.addComment(request);
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const [idUserFromPost, error] = await Posts.getUserIdByIdPost(
+        idPost,
+        idComment
+      );
+      const role = await Users.getRole(userId);
+      if (error) {
+        throw error;
+      } else if (!(idUserFromPost == userId) && !(role == "ustadz")) {
+        throw new Error("Unauthorized");
+      }
+      const [result, error2] = await Posts.addComment({
+        user_id: userId,
+        id_post: idPost,
+        id_toComment: idComment,
+        comment,
+      });
+      if (error2) {
+        throw error;
+      }
+      return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
+      console.error(error);
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
+  },
   async like(request, h) {
     const result = await liked(request, h, true);
     return result;
