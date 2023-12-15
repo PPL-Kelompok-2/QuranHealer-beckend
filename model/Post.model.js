@@ -51,6 +51,7 @@ export class Post extends MakeConnection {
       const commentCount = await this.getCountComment(id_post);
       const up = await this.getCountUp(id_post);
       const down = await this.getCountDown(id_post);
+      const isLiked = await this.isLiked(id_post, idUser);
       return {
         id_post,
         byUser: user_id == idUser ? true : false,
@@ -60,6 +61,7 @@ export class Post extends MakeConnection {
         konten,
         up,
         down,
+        isLiked,
         commentCount,
         created_at,
         updated_at,
@@ -83,21 +85,21 @@ export class Post extends MakeConnection {
                 RETURNING Id_post
         `,
       [
-        datas.User_id,
-        datas.Id_user_ustadz,
-        datas.Username,
-        datas.Judul,
-        datas.Konten,
+        datas.user_id,
+        datas.id_user_ustadz,
+        datas.username,
+        datas.judul,
+        datas.konten,
         1,
       ]
     );
     if (result.rows.length > 0) {
-      return [`data berhasil dimasukkan ${result.rows[0].id_post}`, null];
+      return [result.rows[0].id_post, null];
     }
     return [null, new Error("gagal memasukkan data")];
   }
 
-  async getPost(Id_post) {
+  async getPost(Id_post, idUser) {
     const datas = await this.pool.query(
       `
             SELECT * FROM post WHERE Id_post = $1
@@ -110,6 +112,7 @@ export class Post extends MakeConnection {
     const commentCount = await this.getCountComment(Id_post);
     const up = await this.getCountUp(Id_post);
     const down = await this.getCountDown(Id_post);
+    const isLiked = await this.isLiked(Id_post, idUser);
     const {
       id_post,
       user_id,
@@ -124,7 +127,7 @@ export class Post extends MakeConnection {
     const resultComment = await this.getComment(Id_post);
     const comment = [];
     if (resultComment) {
-      const result = this.transformComment(resultComment);
+      const result = this.transformComment(resultComment, null, idUser);
       comment.push(...result);
     }
 
@@ -133,11 +136,13 @@ export class Post extends MakeConnection {
         id_post,
         user_id,
         username,
+        byUser: user_id == idUser ? true : false,
         id_user_ustadz,
         judul,
         konten,
         up,
         down,
+        isLiked,
         commentCount,
         created_at,
         updated_at,
@@ -147,14 +152,27 @@ export class Post extends MakeConnection {
     ];
   }
 
+  async isLiked(idPost, idUser) {
+    const result = await this.pool.query(
+      `
+      SELECT liked FROM liked WHERE id_post = $1 AND user_id = $2
+    `,
+      [idPost, idUser]
+    );
+    if (!result.rows.length) {
+      return null;
+    }
+    return result.rows[0].liked;
+  }
+
   async liked(datas) {
-    const { User_id, Id_post, liked = true } = datas;
+    const { user_id, id_post, liked = true } = datas;
     // check is liked column is same as on database
     const checkLiked = await this.pool.query(
       `
             SELECT * FROM liked WHERE Id_post = $1 AND User_id = $2
         `,
-      [Id_post, User_id]
+      [id_post, user_id]
     );
     if (checkLiked.rows.length > 0 && checkLiked.rows[0].liked === liked) {
       return ["data sudah ada", null];
@@ -162,14 +180,14 @@ export class Post extends MakeConnection {
     // jika data berbeda
     await this.pool.query(
       `DELETE FROM liked WHERE Id_post = $1 AND User_id = $2`,
-      [Id_post, User_id]
+      [id_post, user_id]
     );
     const result = await this.pool.query(
       `
             INSERT INTO liked (User_id, Id_post, Liked) VALUES 
             ($1,$2,$3) RETURNING Id_liked;
         `,
-      [User_id, Id_post, liked]
+      [user_id, id_post, liked]
     );
     if (result.rows.length > 0) {
       return ["data berhasil dimasukkan", null];
@@ -178,13 +196,13 @@ export class Post extends MakeConnection {
   }
 
   async addComment(datas) {
-    const { User_id, Id_post, id_toComment = null, Comment } = datas;
+    const { user_id, id_post, id_toComment = null, comment } = datas;
     const result = await this.pool.query(
       `
         INSERT INTO comment (User_id, Id_post, id_toComment, Comment) VALUES 
         ($1,$2,$3,$4) RETURNING Id_comment;
     `,
-      [User_id, Id_post, id_toComment, Comment]
+      [user_id, id_post, id_toComment, comment]
     );
     if (result.rows.length > 0) {
       return ["data berhasil dimasukkan", null];
@@ -222,12 +240,12 @@ export class Post extends MakeConnection {
     return down.rows[0].count;
   }
 
-  async likedByUsers(User_id, Id_post) {
+  async likedByUsers(user_id, Id_post) {
     const likedByUser = await this.pool.query(
       `
         SELECT Liked FROM liked WHERE User_id = $1 AND Id_post = $2 ;
     `,
-      [User_id, Id_post]
+      [user_id, Id_post]
     );
     if (!likedByUser.rows.length) {
       return undefined;
@@ -249,7 +267,7 @@ export class Post extends MakeConnection {
     }
   }
 
-  transformComment(inputArray, parentId = null) {
+  transformComment(inputArray, parentId = null, idUser) {
     const result = [];
 
     inputArray.forEach(async (item) => {
@@ -260,6 +278,7 @@ export class Post extends MakeConnection {
           //   name: item.name,
           username: ustadz ? item.name : "anonymous",
           role: item.role,
+          byUser: item.user_id == idUser ? true : false,
           isiComment: item.comment,
           comment: this.transformComment(inputArray, item.id_comment),
         };

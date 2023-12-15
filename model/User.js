@@ -6,6 +6,16 @@ class User extends Database {
     super(tableName, id);
   }
 
+  async getRole(user_id) {
+    const result = await this.pool.query(
+      `
+      SELECT role FROM Users WHERE user_id = $1
+    `,
+      [user_id]
+    );
+    return result.rows[0].role;
+  }
+
   async login(email, password) {
     try {
       const result = await this.pool.query(
@@ -52,10 +62,13 @@ class User extends Database {
         `,
       [PasswordBaru, email]
     );
-    const passwordDirubah = await this.pool.query(`
+    const passwordDirubah = await this.pool.query(
+      `
       SELECT * FROM USERS WHERE email = $1
-    `, [email])
-    if(passwordDirubah.rows[0].password == PasswordBaru) return "berhasil"
+    `,
+      [email]
+    );
+    if (passwordDirubah.rows[0].password == PasswordBaru) return "berhasil";
     throw new Error("Gagal ditambahkan");
   }
 
@@ -68,7 +81,7 @@ class User extends Database {
       if (!result.rows.length) {
         throw new Error("data tidak ada");
       }
-      return result.rows
+      return result.rows;
     } catch (err) {
       throw new Error(err);
     }
