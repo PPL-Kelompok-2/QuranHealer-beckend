@@ -205,7 +205,7 @@ export class Post extends MakeConnection {
       [user_id, id_post, id_toComment, comment]
     );
     if (result.rows.length > 0) {
-      return ["data berhasil dimasukkan", null];
+      return ["data berhasil dimasukkan", null, result.rows[0].id_comment];
     }
     return [null, new Error("gagal memasukkan data")];
   }

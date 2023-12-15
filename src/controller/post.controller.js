@@ -143,7 +143,7 @@ export const postController = {
       } else if (!(idUserFromPost == userId) && !(role == "ustadz")) {
         throw new Error("Unauthorized");
       }
-      const [result, error2] = await Posts.addComment({
+      const [hasil, error2, result] = await Posts.addComment({
         user_id: userId,
         id_post: idPost,
         id_toComment: idComment,
