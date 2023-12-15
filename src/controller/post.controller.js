@@ -219,11 +219,47 @@ export const postController = {
           return decoded.user_id;
         }
       );
-      const role = await Users.getRole(userId);
       const [result, error] = await Posts.deleteComment(idComment, userId);
       if (error) {
         throw error;
       }
+      const role = await Users.getRole(userId);
+      return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
+  },
+  async editPost(request, h) {},
+  async editComment(request, h) {
+    const token = request.headers.authorization.split(" ")[1];
+    const { idComment } = request.params;
+    try {
+      if (!idComment) {
+        throw new Error("idComment can not be null");
+      }
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const { comment } = await postValidation.addComment(request);
+      const [result, error] = await Posts.editComment(
+        userId,
+        idComment,
+        comment
+      );
+      if (error) {
+        throw error;
+      }
+      const role = await Users.getRole(userId);
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {

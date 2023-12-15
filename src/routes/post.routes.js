@@ -25,13 +25,14 @@ export const post = [
   {
     method: "PUT",
     path: "/post/{idPost}",
-    handler: postController.addComment,
+    handler: postController.editPost,
   },
   {
     method: "PUT",
     path: "/comment/{idComment}",
-    handler: postController.addComment,
+    handler: postController.editComment,
   },
+  // BATAS
   {
     method: "DELETE",
     path: "/post/{idPost}",
@@ -42,7 +43,6 @@ export const post = [
     path: "/comment/{idComment}",
     handler: postController.deleteComment,
   },
-  // BATAS
   {
     method: "POST",
     path: "/post/{idPost}/{idComment}",

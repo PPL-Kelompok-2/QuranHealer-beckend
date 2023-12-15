@@ -303,6 +303,28 @@ export class Post extends MakeConnection {
     return ["data berhasil dihapus", null, idComment];
   }
 
+  async editPost(idUser, idPost, datas) {}
+
+  async editComment(idUser, idComment, comment) {
+    const userAuthorize = await this.pool.query(
+      `SELECT * FROM comment WHERE id_comment = $1 AND user_id = $2`,
+      [idComment, idUser]
+    );
+    // check user authorize
+    if (!userAuthorize.rows.length) return [null, new Error("Unauthorized")];
+    // edit comment
+    const result = await this.pool.query(
+      `
+      UPDATE comment SET comment = $1 WHERE id_comment = $2 RETURNING comment;
+    `,
+      [comment, idComment]
+    );
+    if (comment == result.rows[0].comment) {
+      return ["berhasil diubah", null];
+    }
+    return [null, new Error("data gagal dirubah")];
+  }
+
   async getUserIdByIdPost(idPost, idComment) {
     const result = await this.pool.query(
       `
