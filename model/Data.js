@@ -18,7 +18,7 @@ const DDevelopment = new DataDevelopment();
 
 Users.validasiData(["name", "email", "password", "gender"]);
 Users.dataDilarangUbah = ["password"];
-// HARUS DITAMBAHIN UNTUK YANG LAINNYA JUGA
+// HARUS DITAMBAHIN UNTUK YANG LAINNYA JUGA?
 
 export {
   Users,
