@@ -82,7 +82,7 @@ export class Post extends MakeConnection {
                 Konten,
                 Category_id) VALUES 
                 ($1,$2,$3,$4,$5,$6)
-                RETURNING Id_post
+                RETURNING Id_post, judul
         `,
       [
         datas.user_id,
@@ -94,7 +94,7 @@ export class Post extends MakeConnection {
       ]
     );
     if (result.rows.length > 0) {
-      return [result.rows[0].id_post, null];
+      return [result.rows[0], null];
     }
     return [null, new Error("gagal memasukkan data")];
   }

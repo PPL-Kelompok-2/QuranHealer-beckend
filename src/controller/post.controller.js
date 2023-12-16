@@ -110,8 +110,18 @@ export const postController = {
       if (error) {
         throw error;
       }
+      // mengirim notif ke ustadz
+      const [sendNotif, error2] = await Users.addNotif(
+        ustadz,
+        result.id_post,
+        `Anda mendapatkan pertanyaan : ${result.judul}`
+      );
+      if (error2) {
+        throw error2;
+      }
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
+      console.error(error);
       if (error.message == "Unauthorized") {
         return h.response({ error: error.message }).code(401);
       }
@@ -154,7 +164,29 @@ export const postController = {
       }
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
-      console.error(error);
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
+  },
+  async showNotif(request, h) {
+    const token = request.headers.authorization.split(" ")[1];
+    try {
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const role = await Users.getRole(userId);
+      const result = await Users.notif(userId);
+      return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
       if (error.message == "Unauthorized") {
         return h.response({ error: error.message }).code(401);
       }
@@ -291,6 +323,67 @@ export const postController = {
       }
       const role = await Users.getRole(userId);
       return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
+  },
+  async getNotif(request, h) {
+    const token = request.headers.authorization.split(" ")[1];
+    const page = request.query.page || 1;
+    try {
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const result = await Users.getNotif(userId, page);
+      const role = await Users.getRole(userId);
+      return h.response({ message: "Token verified", role, result }).code(200);
+    } catch (error) {
+      if (error.message == "Unauthorized") {
+        return h.response({ error: error.message }).code(401);
+      }
+      return h.response({ error: error.message }).code(400);
+    }
+  },
+  async getDataNotif(request, h) {
+    const token = request.headers.authorization.split(" ")[1];
+    const { idNotif } = request.params;
+    try {
+      const userId = await jwt.verify(
+        token,
+        secretKey,
+        async (err, decoded) => {
+          if (err) {
+            throw new Error("Invalid token");
+          }
+          return decoded.user_id;
+        }
+      );
+      const result = await Users.getDataNotif(userId, idNotif);
+      const role = await Users.getRole(userId);
+      return h
+        .response({
+          message: "Token verified",
+          role,
+          result: {
+            id_notif: result.id_notif,
+            id_post: result.id_post,
+            id_comment: result.id_comment,
+            status: result.status,
+            is_read: result.is_read,
+            created_at: result.created_at,
+          },
+        })
+        .code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
         return h.response({ error: error.message }).code(401);

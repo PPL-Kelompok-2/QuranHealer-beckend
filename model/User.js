@@ -102,6 +102,54 @@ class User extends Database {
       throw new Error(err);
     }
   }
+
+  async getNotif(user_id, indexes) {
+    const result = await this.pool.query(
+      `
+      SELECT * FROM notif WHERE user_id = $1 order by created_at DESC LIMIT 10 OFFSET $2
+    `,
+      [user_id, indexes * 10 - 10]
+    );
+    return result.rows;
+  }
+
+  async getDataNotif(user_id, id_notif) {
+    const userAuthorize = await this.pool.query(
+      `SELECT * FROM notif WHERE id_notif = $1 AND user_id = $2`,
+      [id_notif, user_id]
+    );
+    // check user authorize
+    if (!userAuthorize.rows.length) return [null, new Error("Unauthorized")];
+    // get data
+    const result = await this.pool.query(
+      `
+      SELECT * FROM notif WHERE id_notif = $1
+    `,
+      [id_notif]
+    );
+
+    await this.pool.query(
+      `
+      UPDATE notif SET is_read = true WHERE id_notif = $1
+    `,
+      [id_notif]
+    );
+
+    return result.rows[0];
+  }
+
+  async addNotif(User_id, id_post, status, id_comment = null) {
+    const result = await this.pool.query(
+      `
+      INSERT INTO notif (user_id,id_post, status, id_comment, is_read) VALUES ($1,$2,$3,$4,$5) RETURNING id_notif
+    `,
+      [User_id, id_post, status, id_comment, false]
+    );
+    if (!result.rows.length) {
+      return [null, new Error("gagal memasukkan data notif")];
+    }
+    return [result.rows[0].id_notif, null];
+  }
 }
 
 export default User;
