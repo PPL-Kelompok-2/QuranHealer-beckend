@@ -170,7 +170,7 @@ export const postController = {
         await Users.addNotif(
           idUserFromPost,
           idPost,
-          "anda mendapatkan balasan dari post anda"
+          "anda mendapatkan jawaban dari post anda"
         );
         console.log("mengirim notif jawaban ke pembuat post");
       } else if (!(idUserFromPost == userId) && idComment) {
@@ -189,13 +189,16 @@ export const postController = {
         if (error3) {
           throw error3;
         }
-        await Users.addNotif(
-          // cari id ustadznya
-          idUserFromComment,
-          idPost,
-          "anda mendapatkan comment dari jawaban anda",
-          idComment
-        );
+        const roleComment = await Users.getRole(idUserFromComment);
+        if (roleComment == "ustadz") {
+          await Users.addNotif(
+            // cari id ustadznya
+            idUserFromComment,
+            idPost,
+            "anda mendapatkan comment dari jawaban anda",
+            idComment
+          );
+        }
       } else {
         console.log("gagal");
       }
