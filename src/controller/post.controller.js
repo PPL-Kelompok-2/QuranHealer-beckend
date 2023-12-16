@@ -181,10 +181,8 @@ export const postController = {
           "anda mendapatkan balasan dari comment anda",
           idComment
         );
-        console.log("mengirim notif ke jawaban comment ke pembuat post");
       } else if (idComment) {
         // mengirim notif ke ustadz
-        console.log(idComment);
         const [idUserFromComment, error3] = await Posts.getUserIdByIdComment(
           idComment
         );
@@ -195,10 +193,9 @@ export const postController = {
           // cari id ustadznya
           idUserFromComment,
           idPost,
-          "anda mendapatkan jawaban dari post anda",
+          "anda mendapatkan comment dari jawaban anda",
           idComment
         );
-        console.log("mengirim notif ke ustadz");
       } else {
         console.log("gagal");
       }
