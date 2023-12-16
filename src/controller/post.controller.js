@@ -119,7 +119,9 @@ export const postController = {
       if (error2) {
         throw error2;
       }
-      return h.response({ message: "Token verified", role, result }).code(200);
+      return h
+        .response({ message: "Token verified", role, result: result.id_post })
+        .code(200);
     } catch (error) {
       console.error(error);
       if (error.message == "Unauthorized") {
@@ -162,8 +164,47 @@ export const postController = {
       if (error2) {
         throw error;
       }
+      // mengirim notif
+      if (!(idUserFromPost == userId) && !idComment) {
+        // mengirim notif jawaban ke pembuat post
+        await Users.addNotif(
+          idUserFromPost,
+          idPost,
+          "anda mendapatkan balasan dari post anda"
+        );
+        console.log("mengirim notif jawaban ke pembuat post");
+      } else if (!(idUserFromPost == userId) && idComment) {
+        // mengirim notif ke jawaban comment ke pembuat post
+        await Users.addNotif(
+          idUserFromPost,
+          idPost,
+          "anda mendapatkan balasan dari comment anda",
+          idComment
+        );
+        console.log("mengirim notif ke jawaban comment ke pembuat post");
+      } else if (idComment) {
+        // mengirim notif ke ustadz
+        console.log(idComment);
+        const [idUserFromComment, error3] = await Posts.getUserIdByIdComment(
+          idComment
+        );
+        if (error3) {
+          throw error3;
+        }
+        await Users.addNotif(
+          // cari id ustadznya
+          idUserFromComment,
+          idPost,
+          "anda mendapatkan jawaban dari post anda",
+          idComment
+        );
+        console.log("mengirim notif ke ustadz");
+      } else {
+        console.log("gagal");
+      }
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
+      console.error(error);
       if (error.message == "Unauthorized") {
         return h.response({ error: error.message }).code(401);
       }
@@ -404,9 +445,6 @@ async function liked(request, h, booleans) {
       return decoded.user_id;
     });
     const role = await Users.getRole(userId);
-    if (!(role == "user")) {
-      throw new Error("Unauthorized");
-    }
     const [result, error] = await Posts.liked({
       user_id: userId,
       id_post: idPost,

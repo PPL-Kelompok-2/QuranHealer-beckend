@@ -378,6 +378,16 @@ export class Post extends MakeConnection {
     return [null, new Error("post tidak ada")];
   }
 
+  async getUserIdByIdComment(idComment = null) {
+    const result = await this.pool.query(
+      `
+      SELECT user_id FROM comment WHERE id_comment = $1
+    `,
+      [idComment]
+    );
+    return [result.rows[0].user_id, null];
+  }
+
   transformComment(inputArray, parentId = null, idUser) {
     const result = [];
 
