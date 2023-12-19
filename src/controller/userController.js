@@ -1,4 +1,4 @@
-import { Users } from "../../model/Data.js";
+import { Users, Logouts } from "../../model/Data.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import userValidation from "../middleware/userValidation.js";
@@ -52,6 +52,8 @@ const userController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -108,7 +110,9 @@ const userController = {
       const token = request.headers.authorization.split(" ")[1]; // Extract the token
       const { id } = request.params;
       // Verify token
-      await jwt.verify(token, secretKey, (err, decoded) => {
+      await jwt.verify(token, secretKey, async (err, decoded) => {
+        const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
         if (err) {
           return { error: "Invalid token" };
         }
@@ -141,6 +145,8 @@ const userController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -172,6 +178,8 @@ const userController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }

@@ -7,6 +7,7 @@ import homepage from "./src/routes/homepage.js";
 import favicon from "./src/routes/favicon.js";
 import { post } from "./src/routes/post.routes.js";
 import { ustadzRoutes } from "./src/routes/ustadz.routes.js";
+import { logoutRoute } from "./src/routes/logoutRoute.js";
 
 const init = async () => {
   const server = Hapi.server({
@@ -22,6 +23,7 @@ const init = async () => {
     ...favicon,
     ...post,
     ...ustadzRoutes,
+    ...logoutRoute,
   ]);
 
   await server.start();

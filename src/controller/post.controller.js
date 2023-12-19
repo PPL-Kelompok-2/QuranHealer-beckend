@@ -1,4 +1,4 @@
-import { Posts, Users } from "../../model/Data.js";
+import { Posts, Users, Logouts } from "../../model/Data.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { postValidation } from "../middleware/postValidation.js";
@@ -15,6 +15,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -40,6 +42,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -61,6 +65,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+          if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -91,6 +97,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -139,6 +147,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -218,6 +228,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -253,6 +265,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -286,6 +300,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -316,6 +332,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -347,6 +365,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -379,6 +399,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -403,6 +425,8 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
+          const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
           if (err) {
             throw new Error("Invalid token");
           }
@@ -439,6 +463,8 @@ async function liked(request, h, booleans) {
   const { idPost } = request.params;
   try {
     const userId = await jwt.verify(token, secretKey, async (err, decoded) => {
+      const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
       if (err) {
         throw new Error("Invalid token");
       }
