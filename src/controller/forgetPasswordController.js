@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import cache from "memory-cache";
-import { Users } from "../../model/Data.js";
+import { Logouts, Users } from "../../model/Data.js";
 import { codeCheckBiasa } from "../utils/codeCheck.js";
 import forgetEmail from "../utils/forgetEmail.js";
 import dotenv from "dotenv";
@@ -53,6 +53,8 @@ const forgetPasswordController = {
         request
       );
       const hasil = await jwt.verify(token, secretKey, async (err, decoded) => {
+        const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
         if (err) {
           throw new Error("invalid token");
         }

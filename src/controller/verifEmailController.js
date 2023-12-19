@@ -11,6 +11,8 @@ const verifEmailController = {
         const token = request.headers.authorization.split(" ")[1]; // Extract the token
         try{
             const dataUser = await jwt.verif(token, secretKey, async (err, decoded)=>{
+              const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
                 if (err){
                     throw new Error("Invelid token")
                 }
@@ -53,6 +55,8 @@ const verifEmailController = {
         const { code } = request.params;
         try{
             const dataUser = await jwt.verif(token, secretKey, async (err, decoded)=>{
+              const [rest, error] = await Logouts.cekTokenLogout(token)
+        if(error){throw error}
                 if(err){
                     throw new Error("Invelid token")
                 }
