@@ -4,6 +4,7 @@ import { Post } from "./Post.model.js";
 import dotenv from "dotenv";
 import { DataDevelopment } from "./DataDevelopment.js";
 import { Ustadz } from "./Ustadz.model.js";
+import { Logout } from "./Logout.js";
 dotenv.config();
 
 const Users = new User("USERS", "user_id");
@@ -13,7 +14,7 @@ const Like = new Database("LIKEPOST", "id_liked");
 const Comment = new Database("COMMENT", "id_comment");
 const Posts = new Post();
 const Ustadzs = new Ustadz();
-
+const Logouts = new Logout();
 const DDevelopment = new DataDevelopment();
 
 Users.validasiData(["name", "email", "password", "gender"]);
@@ -30,4 +31,5 @@ export {
   DDevelopment,
   Posts,
   Ustadzs,
+  Logouts,
 };

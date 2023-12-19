@@ -18,22 +18,22 @@ export class Logout extends MakeConnection{
     }
 }
 
-const logout = new Logout();
+// const logout = new Logout();
 
-    async function init(){
-        try {
-        const [result, error] = await logout.doLogout(1,'qwewsredtfgbhnjkjm');
-        if(error){
-            throw error
-        }
-        console.log(result)
-        const [result2, error2] = await logout.cekTokenLogout('qwewsredtfgbhnjkjm')
-        if(error2){
-            throw error2
-        }
-        console.log(result2);
-    } catch (error) {
-        console.log(error.message)
-    }
-    }
-init()
+//     async function init(){
+//         try {
+//         const [result, error] = await logout.doLogout(1,'qwewsredtfgbhnjkjm');
+//         if(error){
+//             throw error
+//         }
+//         console.log(result)
+//         const [result2, error2] = await logout.cekTokenLogout('qwewsredtfgbhnjkjm')
+//         if(error2){
+//             throw error2
+//         }
+//         console.log(result2);
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+//     }
+// init()
