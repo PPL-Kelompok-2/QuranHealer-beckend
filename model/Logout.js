@@ -11,6 +11,11 @@ export class Logout extends MakeConnection{
         if(result.rows.length) return [result.rows[0],null];
         return [null, new Error("Data gagal dimasukkan")]
     }
+    async cekTokenLogout(token){
+        const result = await this.pool.query("select *from logout where Token = $1", [token])
+        if(result.rows.length) return [null, new Error("Invalid Token")];
+        return ["Data Tidak Ada", null]
+    }
 }
 
 const logout = new Logout();
@@ -22,6 +27,11 @@ const logout = new Logout();
             throw error
         }
         console.log(result)
+        const [result2, error2] = await logout.cekTokenLogout('qwewsredtfgbhnjkjm')
+        if(error2){
+            throw error2
+        }
+        console.log(result2);
     } catch (error) {
         console.log(error.message)
     }
