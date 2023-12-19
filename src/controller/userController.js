@@ -1,4 +1,4 @@
-import { Users } from "../../model/Data.js";
+import { Users, Logouts } from "../../model/Data.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import userValidation from "../middleware/userValidation.js";
