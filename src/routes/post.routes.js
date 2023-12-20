@@ -21,7 +21,6 @@ export const post = [
     path: "/post/{idPost}",
     handler: postController.addComment,
   },
-  // BELUM SELESAI
   {
     method: "PUT",
     path: "/post/{idPost}",
@@ -32,7 +31,6 @@ export const post = [
     path: "/comment/{idComment}",
     handler: postController.editComment,
   },
-  // BATAS
   {
     method: "DELETE",
     path: "/post/{idPost}",
