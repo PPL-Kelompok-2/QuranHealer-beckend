@@ -18,6 +18,7 @@ const Logouts = new Logout();
 const DDevelopment = new DataDevelopment();
 
 Users.validasiData(["name", "email", "password", "gender"]);
+// Users.dataDilarangUbah = ["password"];
 // HARUS DITAMBAHIN UNTUK YANG LAINNYA JUGA?
 
 export {

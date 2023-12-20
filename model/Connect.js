@@ -2,7 +2,7 @@ import mysql from "mysql2";
 import config from "../config.js";
 import { MakeConnection } from "./makeConnection.js";
 
-class Database extends MakeConnection{
+class Database extends MakeConnection {
   constructor(table, idRowName) {
     super();
     this.table = table;
@@ -86,9 +86,12 @@ class Database extends MakeConnection{
       .map((value, index) => `$${index + 1}`)
       .join(", ");
 
-    const getDataWithEmail = await this.pool.query(`SELECT * FROM ${this.table} WHERE email = $1`, [data.email]);
-    if(getDataWithEmail.rows.length){
-      throw new Error('data sudah ada')
+    const getDataWithEmail = await this.pool.query(
+      `SELECT * FROM ${this.table} WHERE email = $1`,
+      [data.email]
+    );
+    if (getDataWithEmail.rows.length) {
+      throw new Error("data sudah ada");
     }
 
     const hasil = await this.pool.query(
@@ -98,9 +101,9 @@ class Database extends MakeConnection{
     `,
       [...values]
     );
-      if(!hasil.rowCount){
-        throw new Error("Gagal untuk mendaftar")
-      }
+    if (!hasil.rowCount) {
+      throw new Error("Gagal untuk mendaftar");
+    }
     return "Berhasil untuk mendaftar";
   }
 
@@ -113,13 +116,13 @@ class Database extends MakeConnection{
     this.validasiDataKosong(values);
     this.validasiJumlahData(keys);
 
-    if (this.dataLarang.length) {
-      for (let i = 0; i < keys.length; i++) {
-        if (this.dataLarang.includes(keys[i])) {
-          throw new Error("data yang ingin diubah dilarang diubah");
-        }
-      }
-    }
+    // if (this.dataLarang.length) {
+    //   for (let i = 0; i < keys.length; i++) {
+    //     if (this.dataLarang.includes(keys[i])) {
+    //       throw new Error("data yang ingin diubah dilarang diubah");
+    //     }
+    //   }
+    // }
 
     for (const key in dataUbah) {
       try {
