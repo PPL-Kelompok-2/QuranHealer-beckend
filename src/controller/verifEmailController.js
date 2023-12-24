@@ -30,11 +30,10 @@ const verifEmailController = {
       return h.response({ result }).code(200);
     } catch (err) {
       console.error(err);
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
     // Verify the token
     return jwt.verify(token, secretKey, async (err, decoded) => {
@@ -85,11 +84,10 @@ const verifEmailController = {
       );
       return h.response({ result }).code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
     return jwt.verify(token, secretKey, async (err, decoded) => {
       if (err) {

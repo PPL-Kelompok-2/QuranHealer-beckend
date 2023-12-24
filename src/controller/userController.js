@@ -14,11 +14,10 @@ const userController = {
       const result = await Users.addData(dataInput);
       return h.response({ result }).code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
   },
   async login(request, h) {
@@ -38,11 +37,10 @@ const userController = {
         })
         .code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
   },
   async getUser(request, h) {
@@ -52,8 +50,10 @@ const userController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -75,11 +75,10 @@ const userController = {
         })
         .code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
   },
   async newToken(request, h) {
@@ -102,7 +101,7 @@ const userController = {
         .response({ message: "Token verified", accessToken: result })
         .code(200);
     } catch (err) {
-      return h.response({ error: err.message }).code(400);
+      return h.response({ error: err.message }); //.code(400);
     }
   },
   async getUserId(request, h) {
@@ -111,8 +110,10 @@ const userController = {
       const { id } = request.params;
       // Verify token
       await jwt.verify(token, secretKey, async (err, decoded) => {
-        const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+        const [rest, error] = await Logouts.cekTokenLogout(token);
+        if (error) {
+          throw error;
+        }
         if (err) {
           return { error: "Invalid token" };
         }
@@ -130,11 +131,10 @@ const userController = {
         })
         .code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
   },
   async userEdit(request, h) {
@@ -145,8 +145,10 @@ const userController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -161,11 +163,10 @@ const userController = {
         })
         .code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
   },
   async passwordEdit(request, h) {
@@ -178,8 +179,10 @@ const userController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -199,11 +202,10 @@ const userController = {
         .code(200);
     } catch (err) {
       console.log(err);
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      //.code(400);
     }
   },
 };

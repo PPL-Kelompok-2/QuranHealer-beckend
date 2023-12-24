@@ -58,7 +58,8 @@ export const postController = {
       const result = await Posts.allPost(page, ustadz, userId);
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message });
+      // .code(400);
     }
   },
   async userPost(request, h) {
@@ -87,9 +88,11 @@ export const postController = {
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message });
+        // .code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message });
+      // .code(400);
     }
   },
   async addPost(request, h) {
@@ -141,9 +144,11 @@ export const postController = {
     } catch (error) {
       console.error(error);
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message });
+        // .code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message });
+      // //.code(400);
     }
   },
   async addComment(request, h) {
@@ -226,9 +231,9 @@ export const postController = {
     } catch (error) {
       console.error(error);
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
   async showNotif(request, h) {
@@ -253,9 +258,9 @@ export const postController = {
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
   async like(request, h) {
@@ -298,9 +303,9 @@ export const postController = {
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
   async deleteComment(request, h) {
@@ -332,9 +337,9 @@ export const postController = {
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
   async editPost(request, h) {
@@ -367,9 +372,9 @@ export const postController = {
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
   async editComment(request, h) {
@@ -406,9 +411,9 @@ export const postController = {
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
   async getNotif(request, h) {
@@ -434,9 +439,9 @@ export const postController = {
       return h.response({ message: "Token verified", role, result }).code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
   async getDataNotif(request, h) {
@@ -475,9 +480,9 @@ export const postController = {
         .code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
-        return h.response({ error: error.message }).code(401);
+        return h.response({ error: error.message }); //.code(401);
       }
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
 };
@@ -508,8 +513,8 @@ async function liked(request, h, booleans) {
     return h.response({ message: "Token verified", role, result }).code(200);
   } catch (error) {
     if (error.message == "Unauthorized") {
-      return h.response({ error: error.message }).code(401);
+      return h.response({ error: error.message }); //.code(401);
     }
-    return h.response({ error: error.message }).code(400);
+    return h.response({ error: error.message }); //.code(400);
   }
 }

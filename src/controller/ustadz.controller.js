@@ -6,7 +6,7 @@ export const ustadzController = {
       const result = await Ustadzs.listUstadz();
       return h.response({ result }).code(200);
     } catch (error) {
-      return h.response({ error: error.message }).code(400);
+      return h.response({ error: error.message }); //.code(400);
     }
   },
 };

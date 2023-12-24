@@ -18,12 +18,11 @@ const forgetPasswordController = {
       const result = await forgetEmail(data.email);
       return h.response({ result }).code(200);
     } catch (err) {
-      console.error(err)
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      console.error(err);
+      return h.response({
+        error: err.message,
+      });
+      // .code(400);
     }
   },
   async forgetCode(request, h) {
@@ -39,11 +38,10 @@ const forgetPasswordController = {
       });
       return h.response({ token }).code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      // .code(400);
     }
   },
   async newPassord(request, h) {
@@ -53,8 +51,10 @@ const forgetPasswordController = {
         request
       );
       const hasil = await jwt.verify(token, secretKey, async (err, decoded) => {
-        const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+        const [rest, error] = await Logouts.cekTokenLogout(token);
+        if (error) {
+          throw error;
+        }
         if (err) {
           throw new Error("invalid token");
         }
@@ -66,11 +66,10 @@ const forgetPasswordController = {
       });
       return h.response(hasil).code(200);
     } catch (err) {
-      return h
-        .response({
-          error: err.message,
-        })
-        .code(400);
+      return h.response({
+        error: err.message,
+      });
+      // .code(400);
     }
   },
 };
