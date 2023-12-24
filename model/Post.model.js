@@ -126,10 +126,10 @@ export class Post extends MakeConnection {
 
     const resultComment = await this.getComment(Id_post);
     const comment = [];
-    if (resultComment) {
-      const result = this.transformComment(resultComment, null, idUser);
-      comment.push(...result);
-    }
+    //if (resultComment) {
+    //  const result = this.transformComment(resultComment, null, idUser);
+    //  comment.push(...result);
+    //}
 
     return [
       {
@@ -146,7 +146,7 @@ export class Post extends MakeConnection {
         commentCount,
         created_at,
         updated_at,
-        comment,
+        comment: resultComment,
       },
       null,
     ];
