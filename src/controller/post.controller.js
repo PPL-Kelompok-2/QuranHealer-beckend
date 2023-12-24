@@ -170,15 +170,16 @@ export const postController = {
           return decoded.user_id;
         }
       );
-      const [idUserFromPost, error] = await Posts.getUserIdByIdPost(
+      const [idUserFromPost, error, idUstadz] = await Posts.getUserIdByIdPost(
         idPost,
         idComment
       );
       const role = await Users.getRole(userId);
+      // get id ustadz by post
       if (error) {
         throw error;
-        // } else if (!(idUserFromPost == userId) && !(role == "ustadz")) {
-        //   throw new Error("Unauthorized");
+      } else if (role == "ustadz" && idUstadz == userId) {
+        throw new Error("Unauthorized");
       }
       const [hasil, error2, result] = await Posts.addComment({
         user_id: userId,

@@ -54,6 +54,7 @@ export class Post extends MakeConnection {
       return {
         id_post,
         byUser: user_id == idUser ? true : false,
+        byUstadz: idUser == id_user_ustadz,
         username,
         id_user_ustadz,
         judul,
@@ -372,7 +373,7 @@ export class Post extends MakeConnection {
       }
     }
     if (result.rows.length) {
-      return [result.rows[0].user_id, null];
+      return [result.rows[0].user_id, null, result.rows[0].id_user_ustadz];
     }
     return [null, new Error("post tidak ada")];
   }
