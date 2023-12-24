@@ -15,8 +15,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -42,8 +44,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -65,8 +69,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-          if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -97,8 +103,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -147,8 +155,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -162,8 +172,8 @@ export const postController = {
       const role = await Users.getRole(userId);
       if (error) {
         throw error;
-      } else if (!(idUserFromPost == userId) && !(role == "ustadz")) {
-        throw new Error("Unauthorized");
+        // } else if (!(idUserFromPost == userId) && !(role == "ustadz")) {
+        //   throw new Error("Unauthorized");
       }
       const [hasil, error2, result] = await Posts.addComment({
         user_id: userId,
@@ -228,8 +238,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -265,8 +277,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -300,8 +314,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -332,8 +348,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -365,8 +383,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -399,8 +419,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -425,8 +447,10 @@ export const postController = {
         token,
         secretKey,
         async (err, decoded) => {
-          const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+          const [rest, error] = await Logouts.cekTokenLogout(token);
+          if (error) {
+            throw error;
+          }
           if (err) {
             throw new Error("Invalid token");
           }
@@ -463,8 +487,10 @@ async function liked(request, h, booleans) {
   const { idPost } = request.params;
   try {
     const userId = await jwt.verify(token, secretKey, async (err, decoded) => {
-      const [rest, error] = await Logouts.cekTokenLogout(token)
-        if(error){throw error}
+      const [rest, error] = await Logouts.cekTokenLogout(token);
+      if (error) {
+        throw error;
+      }
       if (err) {
         throw new Error("Invalid token");
       }
