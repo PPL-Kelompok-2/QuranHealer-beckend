@@ -11,15 +11,14 @@ export class Post extends MakeConnection {
     const datas = Id_user_ustadz
       ? await this.pool.query(
           `
-                  SELECT * FROM post WHERE Id_user_ustadz = $2 ORDER BY created_at DESC LIMIT 10 OFFSET $1
+                  SELECT * FROM post WHERE Id_user_ustadz = $1 ORDER BY created_at DESC
               `,
-          [indexes * 10 - 10, Id_user_ustadz]
+          [Id_user_ustadz]
         )
       : await this.pool.query(
           `
-                  SELECT * FROM post ORDER BY created_at DESC LIMIT 10 OFFSET $1
-              `,
-          [indexes * 10 - 10]
+                  SELECT * FROM post ORDER BY created_at DESC
+              `
         );
     const result = await this.getDataForListPost(datas, user_id);
     return result;
@@ -28,9 +27,9 @@ export class Post extends MakeConnection {
   async postByUser(indexes, user_id) {
     const datas = await this.pool.query(
       `
-        SELECT * FROM post WHERE user_id = $2 ORDER BY created_at DESC LIMIT 10 OFFSET $1
+        SELECT * FROM post WHERE user_id = $1 ORDER BY created_at DESC
     `,
-      [indexes * 10 - 10, user_id]
+      [user_id]
     );
     const result = await this.getDataForListPost(datas, user_id);
     return result;
