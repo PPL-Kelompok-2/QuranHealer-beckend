@@ -9,7 +9,7 @@ export class Ustadz extends MakeConnection {
   async listUstadz() {
     const datas = await this.pool.query(`
         SELECT Users.user_id, Users.name, spesialisasi.spesialisasi, gender FROM Users
-        INNER JOIN spesialisasi ON Users.user_id = spesialisasi.user_id WHERE Users.role = "ustadz";
+        INNER JOIN spesialisasi ON Users.user_id = spesialisasi.user_id WHERE Users.role = 'ustadz';
     `);
     return datas.rows;
   }
