@@ -114,9 +114,9 @@ class User extends Database {
       `
       SELECT  count(*) from notif where is_read = false
     `,
-      [user_id, indexes * 10 - 10]
+      []
     );
-    return [result.rows, blm_dibaca];
+    return [result.rows, blm_dibaca.rows[0].count];
   }
 
   async getDataNotif(user_id, id_notif) {

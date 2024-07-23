@@ -418,6 +418,7 @@ export const postController = {
     }
   },
   async getNotif(request, h) {
+    console.log("halo");
     const token = request.headers.authorization.split(" ")[1];
     const page = request.query.page || 1;
     try {
@@ -436,11 +437,13 @@ export const postController = {
         }
       );
       const [result, blm_dibaca] = await Users.getNotif(userId, page);
+      console.log(blm_dibaca);
       const role = await Users.getRole(userId);
       return h
         .response({ message: "Token verified", role, blm_dibaca, result })
         .code(200);
     } catch (error) {
+      console.log(error);
       if (error.message == "Unauthorized") {
         return h.response({ error: error.message }); //.code(401);
       }
