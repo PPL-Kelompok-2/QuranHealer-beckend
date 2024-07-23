@@ -280,6 +280,8 @@ export class Post extends MakeConnection {
       "SELECT * FROM post WHERE id_post = $1",
       [idPost]
     );
+    await this.pool.query("DELETE FROM notif WHERE id_post = $1", [idPost]);
+
     if (result.rows.length) return [null, new Error("data gagal dihapus")];
     return ["data berhasil dihapus", null, idPost];
   }

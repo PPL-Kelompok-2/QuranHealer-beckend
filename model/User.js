@@ -106,7 +106,7 @@ class User extends Database {
   async getNotif(user_id, indexes) {
     const result = await this.pool.query(
       `
-      SELECT * FROM notif WHERE user_id = $1 order by created_at DESC LIMIT 10 OFFSET $2
+      SELECT *, (select count(*) from notif where is_read = false) as blm_dibaca  FROM notif WHERE user_id = $1 order by created_at DESC LIMIT 10 OFFSET $2
     `,
       [user_id, indexes * 10 - 10]
     );
