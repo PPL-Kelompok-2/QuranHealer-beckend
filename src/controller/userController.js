@@ -58,8 +58,9 @@ const userController = {
             throw new Error("Invalid token");
           }
           const data = await Users.getData(decoded.user_id);
-          const { name, role, email, email_verif, gender } = data;
+          const { user_id, name, role, email, email_verif, gender } = data;
           return {
+            user_id,
             name,
             role,
             email,
