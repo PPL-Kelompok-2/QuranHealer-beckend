@@ -435,9 +435,11 @@ export const postController = {
           return decoded.user_id;
         }
       );
-      const result = await Users.getNotif(userId, page);
+      const [result, blm_dibaca] = await Users.getNotif(userId, page);
       const role = await Users.getRole(userId);
-      return h.response({ message: "Token verified", role, result }).code(200);
+      return h
+        .response({ message: "Token verified", role, blm_dibaca, result })
+        .code(200);
     } catch (error) {
       if (error.message == "Unauthorized") {
         return h.response({ error: error.message }); //.code(401);
